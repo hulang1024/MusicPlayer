@@ -2,26 +2,45 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Music Player</title>
+        <title>音乐播放器</title>
     </head>
     <style>
       #player {
         position: relative;
         height: 500px;
         width: 500px;
+        margin: 0 auto;
         margin-top: 50px;
-        border: 1px solid black;
+        /*border: 1px solid black;*/
       }
+      
       #lyricView {
         position: relative;
         width: 100%;
         height: 90%;
         /*border: 1px solid blue;*/
+        text-align: center;
+        overflow-y: hidden;
+        background: gray;
       }
+      #lyricView>div {
+        position: relative;
+        top: 0px
+      }
+      #lyricView>div>p {
+        height: 22px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        /*border: 1px solid blue;*/
+        margin: 0px;
+        font-size: 16px;
+      }
+      
       #controls {
         width: 100%;
         background: #151515;
       }
+      
       #audio {
         width: 270;
         height: 40px;
@@ -29,17 +48,25 @@
       }
     </style>
     <body>
-        <input id="url" type="text" style="width:100%"/>
-        <button id="openUrl" placeholder="歌曲或歌词URL">打开网络歌曲或歌词</button>
+        <input id="audioUrl" type="text" style="width:200px" value="https://github.com/hulang1024/MusicPlayer/raw/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3"/>
+        <button id="openAudioUrl" placeholder="歌曲URL">打开网络歌曲</button>
+        <br>
+        <input id="lyricUrl" type="text" style="width:200px" value="https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.lrc"/>
+        <button id="openLyricUrl" placeholder="歌词URL">打开网络歌词</button>
         <button id="openLyricFile">打开本地歌词</button>
+        <br>
         <input id="file" type="file" style="display:none" />
         
         <div id="player">
-          <div id="lyricView"></div>
+          <div id="lyricView">
+            <div></div>
+          </div>
           <div id="controls">
             <audio id="audio" controls="controls">您的浏览器不支持 audio 标签。</audio>
           </div>
         </div>
+        
+        <script src="jquery-3.1.1.min.js"></script>
         <script src="player.js"></script>
     </body>
 </html>

@@ -1,4 +1,85 @@
-﻿function LyricReader() {
+﻿/*
+音乐播放器主程序
+author: HuLang
+*/
+window.onload = function() {
+  // 初始化文件上传事件监听
+  var fileUpload = document.getElementById('file');
+  fileUpload.addEventListener('change', function() {
+    var file = this.files[0];
+    //var type = file.type.split('/')[0];
+    var src = this.value;
+    var ext = src.substring(src.lastIndexOf('.') + 1);
+    // 检查是否是lrc文件
+    if (ext != 'lrc') {
+      alert('该文件不是lrc歌词格式文件!');
+      return;
+    }
+    openLyricFile(file);
+  })
+  
+  function openLyricFile(file) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      lyricReader.read(this.result);
+    };
+    reader.readAsText(file);
+  }
+  
+  var lyricReader = new LyricReader();
+  var lyricView = new LyricView();
+  
+  lyricReader.addReadListener(function(){
+    lyricView.setSortedTimeTextList(lyricReader.getSortedTimeTextList());
+    lyricView.draw();
+  })
+  
+  
+  var openAudioUrlButton = document.getElementById('openAudioUrl');
+  openAudioUrlButton.onclick = function() {
+    var url = document.getElementById('audioUrl').value.trim();
+    if (!url)
+      return;
+    audio.src = url;
+  }
+  openAudioUrlButton.click();
+
+  var openLyricUrlButton = document.getElementById('openLyricUrl');
+  openLyricUrlButton.onclick = function() {
+    var url = document.getElementById('lyricUrl').value.trim();
+    if (!url)
+      return;
+    
+    var ext = url.substring(url.lastIndexOf('.') + 1);
+    // 检查是否是lrc文件
+    if (ext == 'lrc') {
+      var req = new XMLHttpRequest();
+      req.open('GET', url, true);
+      req.addEventListener('load', function(event){
+        var content = event.target.responseText;
+        lyricReader.read(content);
+      });
+      req.send(null);
+    }
+  }
+  openLyricUrlButton.click();
+  
+  var openLyricFileButton = document.getElementById('openLyricFile');
+  openLyricFileButton.onclick = function() {
+    fileUpload.click();
+  }
+
+  audio.onplay = function() {
+    console.log('play');
+  }
+  
+  audio.ontimeupdate = function() {
+    var currentMS = Math.round(this.currentTime * 1000);
+    lyricView.onTimeUpdate(currentMS);
+  }
+}
+
+function LyricReader() {
   var timeTextList = []; //时间标签列表 [{ms:绝对毫秒,text:文本},...]
   var idMap = {}; // 标识标签map
   
@@ -54,7 +135,7 @@
               var ms = minutes * 60 * 1000 + seconds * 1000 + Math.round(xx / 10);
                //TODO: 同行支持多个时间标签
               var text = line.substring(index + 1);
-              timeTextList.push({ms: ms, text: text});
+              timeTextList.push({time: ms, text: text, timeText: tag});
               lyricLineCnt++;
             } else {
               var text = line.substring(index + 1);
@@ -90,86 +171,47 @@
 }
 
 function LyricView() {
-  var lyricViewDiv = document.getElementById('lyricView');
+  var lyricViewDiv = $('#lyricView>div');
+  var lyricViewHeight = $('#lyricView').height();
   
-  var index = 0;
   var list = null;
-  var lastMS = 0;
-  
+  var lastUpdateMS = 0;
+  var lastIndex = 0, currentIndex = 0;
   
   this.setSortedTimeTextList = function(_list) {
     list = _list;
   }
   
-  this.onTimeUpdate = function(ms) {
-    var indexMS = list[index].ms;
-    for (var iterMS = lastMS; iterMS < ms; iterMS++) {
-      if (iterMS == indexMS) {
-        lyricViewDiv.innerHTML = list[index].text;
-        index++;
-        break;
-      }
-    }
-    
-    lastMS = ms;
+  function getLyricTextHeight() {
+    return 42;
   }
-}
-
-window.onload = function() {
-  // 初始化文件上传事件监听
-  var fileUpload = document.getElementById('file');
-  fileUpload.addEventListener('change', function() {
-    var file = this.files[0];
-    //var type = file.type.split('/')[0];
-    var src = this.value;
-    var ext = src.substring(src.lastIndexOf('.') + 1);
-    // 检查是否是lrc文件
-    if (ext != 'lrc') {
-      alert('该文件不是lrc歌词格式文件!');
+  
+  this.onTimeUpdate = function(updateMS) {
+    if (updateMS < list[currentIndex].time) {
+      lastUpdateMS = updateMS;
       return;
     }
-    openLyricFile(file);
-  })
-  
-  
-  function openAudioFile(src) {
-    audio.src = src;
+    if (currentIndex + 1 > Math.ceil(lyricViewHeight / getLyricTextHeight() / 2)) {
+      var top = parseInt(lyricViewDiv.css('top')) || 0;
+      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'}, 'fast');
+    }
+    lyricViewDiv.find('#time-' + list[lastIndex].time).css('color', '');
+    lyricViewDiv.find('#time-' + list[currentIndex].time).css('color', 'white');
+    
+    lastIndex = currentIndex; // 因为可以跳到前或后,所以需要记录
+    currentIndex++;
+    
+    lastUpdateMS = updateMS;
   }
   
-  function openLyricFile(file) {
-    var reader = new FileReader();
-    reader.onload = function() {
-      lyricReader.read(this.result);
-    };
-    reader.readAsText(file);
-  }
-  
-  var lyricReader = new LyricReader();
-  var lyricView = new LyricView();
-  
-  lyricReader.addReadListener(function(){
-    lyricView.setSortedTimeTextList(lyricReader.getSortedTimeTextList());
-  })
-  
-  var openLyricFileButton = document.getElementById('openLyricFile');
-  openLyricFileButton.onclick = function() {
-    fileUpload.click();
-  }
-  
-  var openUrlButton = document.getElementById('openUrl');
-  var urlTextInput = document.getElementById('url');
-  openUrlButton.onclick = function() {
-    openAudioFile(urlTextInput.value);
-  }
-  
-
-
-  audio.onplay = function() {
-    console.log('play');
-  }
-  
-  audio.ontimeupdate = function() {
-    var currentMS = Math.round(this.currentTime * 1000);
-    lyricView.onTimeUpdate(currentMS);
+  this.draw = function() {
+    lyricViewDiv.text('');
+    list.forEach(function(lyric) {
+      var text = document.createElement('p');
+      text.id = 'time-' + lyric.time;
+      $(text).text(lyric.text);
+      text.title = lyric.timeText;
+      lyricViewDiv.append(text);
+    });
   }
 }
