@@ -182,25 +182,35 @@ function LyricView() {
   function getLyricTextHeight() {
     return 42;
   }
-  
+ 
   this.onTimeUpdate = function(updateMS) {
-    if (updateMS < list[currentIndex].time) {
-      lastUpdateMS = updateMS;
-      return;
+    if (lastUpdateMS === updateMS) {
+      return
     }
-    
+
+    //get index if in the time zone
+    list.forEach((e, i, arr) => {
+      if (e.time <= updateMS && arr[Math.min(i+1, arr.length-1)].time > updateMS) {
+        currentIndex = i
+      } else if (arr[arr.length-1].time < updateMS){
+        currentIndex = arr.length - 1 
+      }
+    }) 
+
+    if (currentIndex === lastIndex) {
+      return
+    }
+
     lyricViewDiv.find('#time-' + list[lastIndex].time).removeClass('sel');
     lyricViewDiv.find('#time-' + list[currentIndex].time).addClass('sel');
     
-    if (currentIndex + 1 > Math.ceil(lyricViewHeight / getLyricTextHeight() / 2)) {
-      var top = parseInt(lyricViewDiv.css('top')) || 0;
-      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'}, 'slow');
-    }
-    
     lastIndex = currentIndex; // 因为可以跳到前或后,所以需要记录
-    currentIndex++;
-    
     lastUpdateMS = updateMS;
+
+    $('#lyricView').animate(
+      { scrollTop: currentIndex * getLyricTextHeight() - 225 + "px" },
+      { queue: false }
+    );
   }
   
   this.draw = function() {
