@@ -134,11 +134,11 @@ function LyricReader() {
               //转换成毫秒
               var ms = minutes * 60 * 1000 + seconds * 1000 + Math.round(xx / 10);
                //TODO: 同行支持多个时间标签
-              var text = line.substring(index + 1);
+              var text = line.substring(index + 1).trim();
               timeTextList.push({time: ms, text: text, timeText: tag});
               lyricLineCnt++;
             } else {
-              var text = line.substring(index + 1);
+              var text = line.substring(index + 1).trim();
               idMap[tag] = text;
             }
           }
@@ -146,12 +146,9 @@ function LyricReader() {
       }
     })
     
-    console.log(lyricLineCnt);
     
-    timeTextList.sort(function(x, y){ return x.ms - y.ms; });
-    
-    console.log(timeTextList);
-    
+    timeTextList.sort(function(x, y){ return x.time - y.time; });
+        
     readListener();
   }
   
@@ -191,12 +188,14 @@ function LyricView() {
       lastUpdateMS = updateMS;
       return;
     }
-    if (currentIndex + 1 > Math.ceil(lyricViewHeight / getLyricTextHeight() / 2)) {
-      var top = parseInt(lyricViewDiv.css('top')) || 0;
-      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'}, 'fast');
-    }
+    
     lyricViewDiv.find('#time-' + list[lastIndex].time).css('color', '');
     lyricViewDiv.find('#time-' + list[currentIndex].time).css('color', 'white');
+    
+    if (currentIndex + 1 > Math.ceil(lyricViewHeight / getLyricTextHeight() / 2)) {
+      var top = parseInt(lyricViewDiv.css('top')) || 0;
+      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'});
+    }
     
     lastIndex = currentIndex; // 因为可以跳到前或后,所以需要记录
     currentIndex++;
