@@ -3,51 +3,9 @@
     <head>
         <meta charset="utf-8" />
         <title>音乐播放器</title>
+        
+        <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
-    <style>
-      #player {
-        position: relative;
-        height: 500px;
-        width: 500px;
-        margin: 0 auto;
-        margin-top: 50px;
-        /*border: 1px solid black;*/
-      }
-      
-      #lyricView {
-        position: relative;
-        width: 100%;
-        height: 90%;
-        /*border: 1px solid blue;*/
-        text-align: center;
-        overflow-y: hidden;
-        background: black;
-      }
-      #lyricView>div {
-        position: relative;
-        top: 0px
-      }
-      #lyricView>div>p {
-        height: 22px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        /*border: 1px solid blue;*/
-        margin: 0px;
-        font-size: 16px;
-        color: gray;
-      }
-      
-      #controls {
-        width: 100%;
-        background: #151515;
-      }
-      
-      #audio {
-        width: 270;
-        height: 40px;
-        margin-left: 115px;
-      }
-    </style>
     <body>
         <input id="audioUrl" type="text" style="width:200px" value="https://github.com/hulang1024/MusicPlayer/raw/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3"/>
         <button id="openAudioUrl" placeholder="歌曲URL">打开网络歌曲</button>

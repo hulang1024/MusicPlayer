@@ -189,12 +189,12 @@ function LyricView() {
       return;
     }
     
-    lyricViewDiv.find('#time-' + list[lastIndex].time).css('color', '');
-    lyricViewDiv.find('#time-' + list[currentIndex].time).css('color', 'white');
+    lyricViewDiv.find('#time-' + list[lastIndex].time).removeClass('sel');
+    lyricViewDiv.find('#time-' + list[currentIndex].time).addClass('sel');
     
     if (currentIndex + 1 > Math.ceil(lyricViewHeight / getLyricTextHeight() / 2)) {
       var top = parseInt(lyricViewDiv.css('top')) || 0;
-      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'});
+      lyricViewDiv.animate({'top': top - getLyricTextHeight() + 'px'}, 'slow');
     }
     
     lastIndex = currentIndex; // 因为可以跳到前或后,所以需要记录
