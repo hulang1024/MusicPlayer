@@ -114,7 +114,7 @@ function LyricReader() {
             if (/[+-]*\d+/.test(parts[0])) {
               var minutes = parseInt(parts[0]); //分
               var seconds; // 秒
-              var xx; // 百分之一秒
+              var xx; // 毫秒
               if (parts.length == 2) {
                 if (parts[1].indexOf('.') != -1) {
                   var t = parts[1].split('.');
@@ -132,7 +132,7 @@ function LyricReader() {
               }
 
               //转换成毫秒
-              var ms = minutes * 60 * 1000 + seconds * 1000 + Math.round(xx / 10);
+              var ms = minutes * 60 * 1000 + seconds * 1000 + xx;
                //TODO: 同行支持多个时间标签
               var text = line.substring(index + 1).trim();
               timeTextList.push({time: ms, text: text, timeText: tag});
