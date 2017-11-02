@@ -28,6 +28,11 @@ window.onload = function() {
   
   var lyricReader = new LyricReader();
   var lyricView = new LyricView();
+  var player = new Player();
+  
+  player.addTimeUpdateListener(function(time){
+    lyricView.onTimeUpdate(time);
+  });
   
   lyricReader.addReadListener(function(){
     lyricView.setSortedTimeTextList(lyricReader.getSortedTimeTextList());
@@ -40,7 +45,7 @@ window.onload = function() {
     var url = document.getElementById('audioUrl').value.trim();
     if (!url)
       return;
-    audio.src = url;
+    player.setSrc(url);
   }
   openAudioUrlButton.click();
 
@@ -68,14 +73,49 @@ window.onload = function() {
   openLyricFileButton.onclick = function() {
     fileUpload.click();
   }
+}
 
-  audio.onplay = function() {
-    console.log('play');
+function Player() {
+  var audio = new Audio();
+  var timeUpdateListeners = [];
+  var player = this;
+  
+  init();
+  
+  function init() {
+    audio.onplay = function() {
+      console.log('play');
+    }
+    
+    audio.ontimeupdate = function() {
+      var currentMS = Math.round(this.currentTime * 1000);
+      
+      timeUpdateListeners.forEach(function(func){
+        func(currentMS);
+      })
+    }
+    
+    $('#btns>a').each(function(){
+      $(this).click(function(){
+        player[ $(this).data('action') ]();
+      });
+    });
   }
   
-  audio.ontimeupdate = function() {
-    var currentMS = Math.round(this.currentTime * 1000);
-    lyricView.onTimeUpdate(currentMS);
+  this.setSrc = function(src) {
+    audio.src = src;
+  }
+  
+  this.play = function() {
+    if (audio.paused)
+      audio.play();
+    else
+      audio.pause();
+  }
+  
+
+  this.addTimeUpdateListener = function(func) {
+    timeUpdateListeners.push(func);
   }
 }
 

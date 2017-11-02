@@ -7,22 +7,27 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <input id="audioUrl" type="text" style="width:200px" value="https://github.com/hulang1024/MusicPlayer/raw/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3"/>
+        <input id="audioUrl" type="text" style="width:200px"
+          value="https://github.com/hulang1024/MusicPlayer/raw/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3"/>
         <button id="openAudioUrl" placeholder="歌曲URL">打开网络歌曲</button>
         <br>
-        <input id="lyricUrl" type="text" style="width:200px" value="https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.lrc"/>
+        <input id="lyricUrl" type="text" style="width:200px"
+          value="https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/ex/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.lrc"/>
         <button id="openLyricUrl" placeholder="歌词URL">打开网络歌词</button>
         <button id="openLyricFile">打开本地歌词</button>
         <br>
         <input id="file" type="file" style="display:none" />
         
+        
+        <div id="lyricView">
+          <div></div>
+        </div>
+
         <div id="player">
-          <div id="lyricView">
-            <div></div>
+          <div id="btns">
+            <a href="javascript:;" hidefocus="true" data-action="play" class="ply j-flag" title="播放/暂停(p)">播放/暂停</a>
           </div>
-          <div id="controls">
-            <audio id="audio" controls="controls">您的浏览器不支持 audio 标签。</audio>
-          </div>
+          
         </div>
         
         <script src="jquery-3.1.1.min.js"></script>

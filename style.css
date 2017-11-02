@@ -1,15 +1,7 @@
-#player {
+#lyricView {
   position: relative;
   height: 500px;
   width: 500px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-
-#lyricView {
-  position: relative;
-  width: 100%;
-  height: 90%;
   overflow-y: hidden;
   background: black;
 }
@@ -35,6 +27,13 @@
     -o-transition: color 0.7s linear;
     transition: color 0.7s linear;
 }
+
+#player {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
 #controls {
   width: 100%;
   background: #151515;
