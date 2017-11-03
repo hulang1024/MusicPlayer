@@ -90,7 +90,7 @@ function PlayList() {
   this.init = function(_songs) {
     // load
     var req = new XMLHttpRequest();
-    var url = 'https://github.com/hulang1024/MusicPlayer/raw/master/res/songs.json'//'http://og11a17b0.bkt.clouddn.com/songs.json';
+    var url = 'https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/res/songs.json'//'http://og11a17b0.bkt.clouddn.com/songs.json';
     req.open('GET', url + '?t=' + +new Date(), true);
     req.addEventListener('load', function(event){
       var json = event.target.responseText;
