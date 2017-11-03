@@ -353,6 +353,7 @@ function Player(playList) {
 function LyricView(player) {
   var lyricViewDiv = $('#lyricView>div');
   var lyricViewHeight = $('#lyricView').height();
+  var lyricTextHeight = 38;
   
   var lyricList = null;
   var lastUpdateMS = 0;
@@ -375,28 +376,14 @@ function LyricView(player) {
     req.send(null);
   });
   
-  player.signals.timeupdate.add(function(time){
-    onTimeUpdate(time);
-  });
-
-  player.signals.seeking.add(function(time){
-    onSeeking(time);
-  });
-  player.signals.seeked.add(function(time){
-    onSeeked(time);
-  });
+  player.signals.timeupdate.add(onTimeUpdate);
+  player.signals.seeking.add(onSeeking);
+  player.signals.seeked.add(onSeeked);
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
   player.signals.next.add(reset);
   
-  function getLyricTextHeight() {
-    return 32;
-  }
-  
-  var seeking = false;
-  
   function onSeeking(time) {
-    seeking = true;
   }
   
   function onSeeked(time) {
@@ -405,14 +392,9 @@ function LyricView(player) {
         break;
     }
     currentIndex = i;
-    
-    gotoLyric(currentIndex, 'fast');
-    seeking = false;
   }
   
   function onTimeUpdate(updateMS) {
-    if (seeking)
-      return;
     if (updateMS < lyricList[currentIndex].time) {
       lastUpdateMS = updateMS;
       return;
@@ -429,10 +411,16 @@ function LyricView(player) {
   function gotoLyric(index, speed) {
     lyricViewDiv.find('#time-' + lyricList[lastIndex].time).removeClass('sel');
     lyricViewDiv.find('#time-' + lyricList[index].time).addClass('sel');
-    var top;
-
-    top = -index * getLyricTextHeight() + Math.ceil(lyricViewHeight / getLyricTextHeight() / 2) * getLyricTextHeight();
-    lyricViewDiv.animate({'top': top + 'px'}, speed, 'swing');
+    
+    if (index < Math.floor(lyricViewHeight / lyricTextHeight) / 2) {
+      var top = parseInt(lyricViewDiv.css('top'));
+      if (top != 0) {
+        lyricViewDiv.animate({'top': '0'}, speed, 'swing');
+      }
+    } else {
+      var top = - (index - Math.floor(lyricViewHeight / lyricTextHeight) / 2) * lyricTextHeight;
+      lyricViewDiv.animate({'top': top + 'px'}, speed, 'swing');
+    }
   }
   
   function reset() {
