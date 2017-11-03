@@ -159,7 +159,7 @@ function Player(playList) {
   var songSelectedIndex = 0;
   
   this.signals = {};
-  ['timeupdate', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
+  ['timeupdate', 'loaded', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
     player.signals[name] = new signals.Signal();
   });
   
@@ -170,6 +170,8 @@ function Player(playList) {
   function init() {
     audio.onloadeddata = function() {
       displayTime(this.duration, this.currentTime);
+      
+      player.signals.loaded.dispatch(playList.getSong(songSelectedIndex), mode);
     }
     
     // 当用户点击Audio开始按钮可导致onplay
@@ -181,8 +183,6 @@ function Player(playList) {
         audio.src = song.url;
         audio.play();
       }
-    
-      player.signals.played.dispatch(playList.getSong(songSelectedIndex), mode);
     }
     
     audio.onpause = function() {
@@ -359,7 +359,7 @@ function LyricView(player) {
   var lastIndex = 0, currentIndex = 0;
   var lyricReader = new LyricReader();
 
-  player.signals.played.add(function(song, mode) {
+  player.signals.loaded.add(function(song, mode) {
     var req = new XMLHttpRequest();
     req.open('GET', song.lrcUrl, true);
     req.addEventListener('load', function(event){
