@@ -18,19 +18,22 @@
         <input id="file" type="file" style="display:none" />
         -->
         
-        <div id="lyricView">
-          <div></div>
+        <div id="playList">
+          <div id="songList"></div>
+          <div id="lyricView">
+            <div></div>
+          </div>
         </div>
-
+        
         <div id="player">
           <div id="btns">
-            <a href="javascript:;" hidefocus="true" data-action="play" class="prev" title="上一首">上一首</a>
+            <a class="prev" href="javascript:;" hidefocus="true" data-action="prev" title="上一首">上一首</a>
             <!--<a href="javascript:;" hidefocus="true" data-action="play" class="play" title="播放/暂停(p)">播放/暂停</a>-->
-            <a href="javascript:;" hidefocus="true" data-action="play" class="next" title="下一首">下一首</a>
+            <a class="next" href="javascript:;" hidefocus="true" data-action="next" title="下一首">下一首</a>
           </div>
           <!--<div id="time"></div>-->
           <audio id="audio" controls="controls"></audio>
-          
+          <a class="icon" href="javascript:;" hidefocus="true" data-action="mode" title="循环">循环</a>
         </div>
         
         <script src="signals.min.js"></script>

@@ -1,6 +1,65 @@
+ul,li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#player {
+  position: absolute;
+  bottom: 0;
+  height: 47px;
+  margin: 0 auto;
+}
+
+#player #btns {
+  float: left;
+  width: 120px;
+}
+#player #btns a {
+  line-height: 40px;
+}
+
+#player .icon {
+  line-height: 40px;
+}
+
+#controls {
+  width: 100%;
+  background: #151515;
+}
+
+#audio {
+  width: 270;
+  height: 40px;
+  left: 115px;
+}
+
+#playList {
+  position: absolute;
+  bottom: 47px;
+  height: 301px;
+}
+#songList {
+  position: absolute;
+  width: 553px;
+  height: 100%;
+}
+#songList ul li{
+  width: 100%;
+  overflow: hidden;
+  background: black;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #989898;
+}
+#songList ul li.sel {
+  background-color: rgba(0,0,0,0.3);
+}
+
 #lyricView {
-  position: relative;
-  height: 500px;
+  position: absolute;
+  left: 560px;
+  height: 301px;
   width: 500px;
   overflow-y: hidden;
   background: black;
@@ -10,9 +69,10 @@
   top: 0px
 }
 #lyricView>div>p {
-  height: 22px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  height: 28px;
+  line-height: 28px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   margin: 0px;
   font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
@@ -26,28 +86,4 @@
     -moz-transition: color 0.7s linear;
     -o-transition: color 0.7s linear;
     transition: color 0.7s linear;
-}
-
-#player {
-  position: relative;
-  margin: 0 auto;
-}
-
-#player #btns {
-  float: left;
-  width: 120px;
-}
-#player #btns a {
-  line-height: 40px;
-}
-
-#controls {
-  width: 100%;
-  background: #151515;
-}
-
-#audio {
-  width: 270;
-  height: 40px;
-  left: 115px;
 }

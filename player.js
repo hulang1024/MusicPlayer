@@ -9,7 +9,18 @@ window.onload = function() {
   var player = new Player(playList);
   var lyricView = new LyricView(player);
   
-  playList.load();
+  playList.setPlayer(player);
+  playList.init();
+}
+
+/*
+歌曲
+*/
+function Song(sepc) {
+  this.name = sepc.name;
+  this.artist = sepc.artist;
+  this.url = sepc.url;
+  this.lrcUrl = sepc.lrcUrl;
 }
 
 /*
@@ -22,9 +33,11 @@ window.onload = function() {
 function PlayList() {
   var songs = [];
   var playList = this;
-  // 当前要播放歌曲在列表中的索引
-  var nowIndex = 0;
+  var player;
   
+  this.signals = {
+    songSelected: new signals.Signal()
+  };
   /*
   var openAudioUrlButton = document.getElementById('openAudioUrl');
   openAudioUrlButton.onclick = function() {
@@ -70,54 +83,82 @@ function PlayList() {
   }
   */
   
-  this.load = function() {
-    var SONGS = [
-      {name: '心跳 - 王力宏', artist: '王力宏',
-        url: "http://og11a17b0.bkt.clouddn.com/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3",
-        lrcUrl: "http://og11a17b0.bkt.clouddn.com/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.lrc"
-      }
-    ];
-    songs = SONGS;
-    
-    draw();
+  this.setPlayer = function(_player) {
+    player = _player;
+  }
+  
+  this.init = function(_songs) {
+    // load
+    var req = new XMLHttpRequest();
+    req.open('GET', 'http://og11a17b0.bkt.clouddn.com/songs.json?t=' + +new Date(), true);
+    req.addEventListener('load', function(event){
+      var json = event.target.responseText;
+      songs = JSON.parse(json);
+      draw();
+      
+      playList.select(1);
+    });
+    req.send(null);
   };
   
   this.addPlay = function(song) {
     songs.add(song);
   }
   
-  // 返回歌曲
-  this.getSong = function() {
-    return songs[nowIndex];
+  this.select = function(index) {
+    select(index);
+    player.load(index);
+  }
+
+  this.getSong = function(index) {
+    return songs[index];
+  }
+  
+  this.getLength = function() {
+    return songs.length;
   }
   
   function draw() {
-    
+    var songListDiv = $('#songList');
+    var ul = $(document.createElement('ul'));
+    songs.forEach(function(song, index){
+      var li = $(document.createElement('li'));
+      li.data('index', index);
+      li.text(song.name + " - " + song.artist);
+      li.click(function() {
+        var index = $(this).data('index');
+        select(index);
+        player.play(index);
+      });
+      
+      ul.append(li);
+    });
+    songListDiv.append(ul);
+  }
+  
+  function select(index) {
+    var lis = $('#songList>ul>li');
+    lis.removeClass('sel');
+    lis.eq(index).addClass('sel');
   }
   
 }
 
 /*
-歌曲
-*/
-function Song(sepc) {
-  this.name = sepc.name;
-  this.artist = sepc.artist;
-  this.url = sepc.url;
-  this.lrcUrl = sepc.lrcUrl;
-}
-
-/*
-播放歌曲
+歌曲播放
 控制播放/暂停,上一首,下一首,显示进度条和进度数值
 */
 function Player(playList) {
   var audio = document.getElementById('audio');
-
   var player = this;
+  var playing = true; // 播放器播放状态
+  // 模式: 循环=loop, 随机=shuffle, 单曲循环=one
+  var mode = 'loop';
+  // 当前要播放歌曲在列表中的索引
+  var songSelectedIndex = 0;
   
   this.signals = {};
-  ['timeupdate', 'played', 'paused', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
+  ['timeupdate', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
     player.signals[name] = new signals.Signal();
   });
   
@@ -130,24 +171,22 @@ function Player(playList) {
       displayTime(this.duration, this.currentTime);
     }
     
-    // 当用户点击Audio开始按钮
+    // 当用户点击Audio开始按钮可导致onplay
     audio.onplay = function() {
       console.log('play');
-      
+      playing = true;
       if (audio.played.length == 0 && audio.src == "") {
-        // 获取歌曲信息
-        var song = playList.getSong();
-        // 设置URL
+        var song = playList.getSong(songSelectedIndex);
         audio.src = song.url;
-        // 播放
         audio.play();
       }
     
-      player.signals.played.dispatch(playList.getSong());
+      player.signals.played.dispatch(playList.getSong(songSelectedIndex), mode);
     }
     
     audio.onpause = function() {
       console.log('paused');
+      playing = false;
       player.signals.paused.dispatch();
     }
     
@@ -157,39 +196,146 @@ function Player(playList) {
       displayTime(this.duration, this.currentTime);
     }
     
-    $('#btns>a').each(function(){
+    audio.onseeking = function() {
+      console.log('seeking');
+      player.signals.seeking.dispatch(this.currentTime * 1000);
+    }
+    
+    audio.onseeked = function() {
+      console.log('seeked');
+      player.signals.seeked.dispatch(this.currentTime * 1000);
+    }
+    
+    audio.onended = function() {
+      player.signals.ended.dispatch();
+      
+      switch (mode) {
+        case 'loop':
+          if (songSelectedIndex < playList.getLength() - 1)
+            songSelectedIndex++;
+          else
+            songSelectedIndex = 0;
+        case 'one':
+          audio.loop = true;
+          audio.play();
+          return;
+        case 'shuffle':
+          shuffle();
+          break;
+      }
+      
+      var song = playList.getSong(songSelectedIndex);
+      audio.src = song.url;
+      audio.play();
+    }
+  
+    // 为按钮绑定事件处理
+    $('#player [data-action]').each(function(){
       $(this).click(function(){
-        player[ $(this).data('action') ]();
+        player[ $(this).data('action') + 'OnClick' ]($(this));
       });
     });
     
     displayTime(0,0);
   }
   
-  audio.onseeking = function() {
-    console.log('seeking');
-    player.signals.seeking.dispatch(this.currentTime * 1000);
+  this.load = function(index) {
+    songSelectedIndex = index;
+    var song = playList.getSong(index);
+    audio.src = song.url;
   }
   
-  audio.onseeked = function() {
-    console.log('seeked');
-    player.signals.seeked.dispatch(this.currentTime * 1000);
+  this.play = function(index) {
+    songSelectedIndex = index;
+    var song = playList.getSong(index);
+    audio.src = song.url;
+    audio.play();
   }
   
-  this.play = function() {
-    if (audio.paused) {
-      //TODO: 结束时是否也是paused? 待测试
-      if (audio.played.length == 0 && audio.src == "") {
-        // 获取歌曲信息
-        var song = playList.getSong();
-        // 设置URL
-        audio.src = song.url;
-        // 播放
-        audio.play();
-      }
-    } else {
-      audio.pause();
+  // 上一首
+  this.prevOnClick = function() {
+    player.signals.prev.dispatch();
+    
+    switch (mode) {
+      case 'loop':
+      case 'one':
+        if (songSelectedIndex > 0)
+          songSelectedIndex--;
+        else
+          songSelectedIndex = playList.getLength() - 1;
+        break;
+      case 'shuffle':
+        shuffle();
+        break;
     }
+    
+    var song = playList.getSong(songSelectedIndex);
+    audio.src = song.url;
+    // 如果播放状态中,上一首自动播放,如果暂停,上一首不自动播放
+    if (playing) {
+      audio.play();
+    }
+  }
+  
+  // 下一首
+  this.nextOnClick = function() {
+    player.signals.next.dispatch();
+    
+    switch (mode) {
+      case 'loop':
+      case 'one':
+        if (songSelectedIndex < playList.getLength() - 1)
+          songSelectedIndex++;
+        else
+          songSelectedIndex = 0;
+        break;
+      case 'shuffle':
+        shuffle();
+        break;
+    }
+    
+    var song = playList.getSong(songSelectedIndex);
+    audio.src = song.url;
+    // 如果播放状态中,下一首自动播放,如果暂停,下一首不自动播放
+    if (playing) {
+      audio.play();
+    }
+  }
+  
+  this.modeOnClick = function(a) {
+    a.removeClass('icon-' + mode);
+    turnMode();
+    a.addClass('icon-' + mode);
+    var name = {'loop': '循环', 'shuffle': '随机', 'one': '单曲循环'}[mode];
+    a.text(name);
+    a.attr('title', name);
+  }
+  
+  this.getMode = function() { return mode; }
+  this.setMode = function(m) {
+    if (['loop', 'shuffle', 'one'].indexOf(m) != -1)
+      mode = m;
+  }
+  
+  function turnMode() {
+    switch (mode) {
+      case 'loop':
+        mode = 'shuffle';
+        break;
+      case 'shuffle':
+        mode = 'one';
+        break;
+      case 'one':
+        mode = 'loop';
+        break;
+    }
+  }
+  
+  function shuffle() {
+    var oldIndex = songSelectedIndex;
+    do {
+      songSelectedIndex = randInt(0, songs.length);
+    } while(oldIndex == songSelectedIndex);
   }
   
   function displayTime(duration, currentTime) {
@@ -200,10 +346,6 @@ function Player(playList) {
     var durSeconds = duration % 60;
     timeDisplay.html('<em>' + padNN(curMinutes) + ':' + padNN(curSeconds) + '</em> / '
       + padNN(durMinutes) + ':' + padNN(durSeconds));
-  }
-  
-  function padNN(n) {
-    return n < 10 ? '0' + n : n;
   }
 }
 
@@ -216,11 +358,17 @@ function LyricView(player) {
   var lastIndex = 0, currentIndex = 0;
   var lyricReader = new LyricReader();
 
-  player.signals.played.add(function(song) {
+  player.signals.played.add(function(song, mode) {
     var req = new XMLHttpRequest();
     req.open('GET', song.lrcUrl, true);
     req.addEventListener('load', function(event){
       var content = event.target.responseText;
+      
+      lyricReader.addReadListener(function(){
+        lyricList = lyricReader.getSortedTimeTextList();
+        reset();
+        draw();
+      });
       lyricReader.readString(content);
     });
     req.send(null);
@@ -236,14 +384,12 @@ function LyricView(player) {
   player.signals.seeked.add(function(time){
     onSeeked(time);
   });
-  
-  lyricReader.addReadListener(function(){
-    lyricList = lyricReader.getSortedTimeTextList();
-    draw();
-  });
+  player.signals.ended.add(reset);
+  player.signals.prev.add(reset);
+  player.signals.next.add(reset);
   
   function getLyricTextHeight() {
-    return 42;
+    return 32;
   }
   
   var seeking = false;
@@ -264,7 +410,6 @@ function LyricView(player) {
   }
   
   function onTimeUpdate(updateMS) {
-    console.log('lyricView.onTimeUpdate')
     if (seeking)
       return;
     if (updateMS < lyricList[currentIndex].time) {
@@ -287,6 +432,13 @@ function LyricView(player) {
 
     top = -index * getLyricTextHeight() + Math.ceil(lyricViewHeight / getLyricTextHeight() / 2) * getLyricTextHeight();
     lyricViewDiv.animate({'top': top + 'px'}, speed, 'swing');
+  }
+  
+  function reset() {
+    lyricViewDiv.text('');
+    lastIndex = 0;
+    currentIndex = 0;
+    lastUpdateMS = 0;
   }
   
   function draw() {
@@ -391,4 +543,13 @@ function LyricReader() {
   this.getIdValue = function(id) {
     return idMap[id];
   }
+}
+
+function padNN(n) {
+  return n < 10 ? '0' + n : n;
+}
+
+// 随机[m,n)
+function randInt(m, n) {
+  return Math.floor(Math.random() * (m + n)) - m;
 }
