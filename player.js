@@ -12,6 +12,44 @@ window.onload = function() {
   
   playList.setPlayer(player);
   playList.init();
+  
+  new ActiveManager(player);
+}
+
+function ActiveManager(player) {
+  var me = this;
+  var timer = null;
+  var isSleeping = true;
+  var lastActiveTime = 0;
+  
+  var intervalTime = 3000;
+  
+  $(document).mousemove(function(){
+    lastActiveTime = +new Date;
+    wakeup();
+  });
+  
+  var timer = setInterval(function(){
+    if ((+new Date - lastActiveTime) > intervalTime) {
+      sleep();
+    }
+  }, intervalTime);
+
+  function wakeup() {
+    if (!isSleeping)
+      return;
+    isSleeping = false;
+    $('#songList').fadeIn(100);
+    player.show();
+  }
+  
+  function sleep() {
+    if (isSleeping)
+      return;
+    isSleeping = true;
+    $('#songList').fadeOut();
+    player.hide();
+  }
 }
 
 /*
@@ -159,6 +197,7 @@ function Player(playList) {
   var mode = 'loop';
   // 当前要播放歌曲在列表中的索引
   var songSelectedIndex = 0;
+  var hovered = false;
   
   this.signals = {};
   ['timeupdate', 'loaded', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
@@ -170,6 +209,22 @@ function Player(playList) {
   init();
   
   function init() {
+    $('#player').css('left', ($(window).width() - $('#player').width()) / 2);
+    // 为按钮绑定事件处理
+    $('#player [data-action]').each(function(){
+      $(this).click(function(){
+        player[ $(this).data('action') + 'OnClick' ]($(this));
+      });
+    });
+    $('#player').hover(function() {
+      hovered = true;
+    }).mouseout(function() {
+      hovered = false;
+    });
+    
+    displayTime(0,0);
+    
+    
     audio.onloadeddata = function() {
       displayTime(this.duration, this.currentTime);
       
@@ -185,6 +240,7 @@ function Player(playList) {
         audio.src = song.url;
         audio.play();
       }
+      player.signals.played.dispatch(songSelectedIndex);
     }
     
     audio.onpause = function() {
@@ -232,15 +288,6 @@ function Player(playList) {
       audio.src = song.url;
       audio.play();
     }
-  
-    // 为按钮绑定事件处理
-    $('#player [data-action]').each(function(){
-      $(this).click(function(){
-        player[ $(this).data('action') + 'OnClick' ]($(this));
-      });
-    });
-    
-    displayTime(0,0);
   }
   
   this.load = function(index) {
@@ -319,6 +366,17 @@ function Player(playList) {
   this.setMode = function(m) {
     if (['loop', 'shuffle', 'one'].indexOf(m) != -1)
       mode = m;
+  }
+  
+  this.hide = function() {
+    if (hovered)
+      return;
+    
+    $(audio).animate({bottom: - $('#player').height()}, 'slow');
+  }
+  
+  this.show = function() {
+    $(audio).animate({bottom: 0}, 100);
   }
   
   function turnMode() {
@@ -431,6 +489,7 @@ function LyricView(player) {
   
   function reset() {
     lyricViewDiv.text('');
+    lyricWindowDiv.text('');
     lastIndex = 0;
     currentIndex = 0;
     lastUpdateMS = 0;
@@ -449,7 +508,6 @@ function LyricView(player) {
 }
 
 function LyricWindow() {
-  
 }
 
 /*
