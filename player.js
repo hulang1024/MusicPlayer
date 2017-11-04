@@ -8,6 +8,7 @@ window.onload = function() {
   var playList = new PlayList();
   var player = new Player(playList);
   var lyricView = new LyricView(player);
+  var lyricWindow = new LyricWindow(player);
   
   playList.setPlayer(player);
   playList.init();
@@ -90,7 +91,7 @@ function PlayList() {
   this.init = function(_songs) {
     // load
     var req = new XMLHttpRequest();
-    var url = 'https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/res/songs.json'//'http://og11a17b0.bkt.clouddn.com/songs.json';
+    var url = CONFIG['songsUrl'];
     req.open('GET', url + '?t=' + +new Date(), true);
     req.addEventListener('load', function(event){
       var json = event.target.responseText;
@@ -112,6 +113,7 @@ function PlayList() {
   }
 
   this.getSong = function(index) {
+    select(index);
     return songs[index];
   }
   
@@ -216,6 +218,7 @@ function Player(playList) {
             songSelectedIndex++;
           else
             songSelectedIndex = 0;
+          break;
         case 'one':
           audio.loop = true;
           audio.play();
@@ -354,6 +357,7 @@ function LyricView(player) {
   var lyricViewDiv = $('#lyricView>div');
   var lyricViewHeight = $('#lyricView').height();
   var lyricTextHeight = 38;
+  var lyricWindowDiv = $('#lyricWindow');
   
   var lyricList = null;
   var lastUpdateMS = 0;
@@ -402,6 +406,8 @@ function LyricView(player) {
     
     gotoLyric(currentIndex, 'slow');
     
+    lyricWindowDiv.text(lyricList[currentIndex].text);
+    
     lastIndex = currentIndex;
     currentIndex++;
     
@@ -442,6 +448,9 @@ function LyricView(player) {
   }
 }
 
+function LyricWindow() {
+  
+}
 
 /*
 歌词读取器
