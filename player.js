@@ -209,7 +209,7 @@ function Player(playList) {
   init();
   
   function init() {
-    $('#player').css('left', ($(window).width() - $('#player').width()) / 2);
+    $('#audio').css('left', ($(window).width() - $('#audio').width()) / 2);
     // 为按钮绑定事件处理
     $('#player [data-action]').each(function(){
       $(this).click(function(){
@@ -224,7 +224,6 @@ function Player(playList) {
     
     displayTime(0,0);
     
-    
     audio.onloadeddata = function() {
       displayTime(this.duration, this.currentTime);
       
@@ -235,11 +234,8 @@ function Player(playList) {
     audio.onplay = function() {
       console.log('play');
       playing = true;
-      if (audio.played.length == 0 && audio.src == "") {
-        var song = playList.getSong(songSelectedIndex);
-        audio.src = song.url;
-        audio.play();
-      }
+      var song = playList.getSong(songSelectedIndex);
+      document.title = song.name;
       player.signals.played.dispatch(songSelectedIndex);
     }
     
@@ -412,7 +408,7 @@ function Player(playList) {
 }
 
 function LyricView(player) {
-  var lyricViewDiv = $('#lyricView>div');
+  var lyricViewDiv = $('#lyricView');
   var lyricViewHeight = $('#lyricView').height();
   var lyricTextHeight = 38;
   var lyricWindowDiv = $('#lyricWindow');
@@ -421,6 +417,8 @@ function LyricView(player) {
   var lastUpdateMS = 0;
   var lastIndex = 0, currentIndex = 0;
   var lyricReader = new LyricReader();
+  
+  var scroll = new Scroll('#lyricView', lyricTextHeight);
 
   player.signals.loaded.add(function(song, mode) {
     var req = new XMLHttpRequest();
@@ -437,7 +435,6 @@ function LyricView(player) {
     });
     req.send(null);
   });
-  
   player.signals.timeupdate.add(onTimeUpdate);
   player.signals.seeking.add(onSeeking);
   player.signals.seeked.add(onSeeked);
@@ -473,17 +470,17 @@ function LyricView(player) {
   }
   
   function gotoLyric(index, speed) {
-    lyricViewDiv.find('#time-' + lyricList[lastIndex].time).removeClass('sel');
-    lyricViewDiv.find('#time-' + lyricList[index].time).addClass('sel');
+    lyricViewDiv.find('[data-time=' + lyricList[lastIndex].time + ']').removeClass('sel');
+    lyricViewDiv.find('[data-time=' + lyricList[index].time + ']').addClass('sel');
     
     if (index < Math.floor(lyricViewHeight / lyricTextHeight) / 2) {
-      var top = parseInt(lyricViewDiv.css('top'));
+      var top = parseInt(lyricViewDiv.scrollTop());
       if (top != 0) {
-        lyricViewDiv.animate({'top': '0'}, speed, 'swing');
+        scroll.animateScrollTopTo(0, speed);
       }
     } else {
-      var top = - (index - Math.floor(lyricViewHeight / lyricTextHeight) / 2) * lyricTextHeight;
-      lyricViewDiv.animate({'top': top + 'px'}, speed, 'swing');
+      var top = (index - Math.floor(lyricViewHeight / lyricTextHeight) / 2) * lyricTextHeight;
+      scroll.animateScrollTopTo(top, speed);
     }
   }
   
@@ -498,16 +495,77 @@ function LyricView(player) {
   function draw() {
     lyricViewDiv.text('');
     lyricList.forEach(function(lyric) {
-      var text = document.createElement('p');
-      text.id = 'time-' + lyric.time;
+      var text = $(document.createElement('p'));
+      text.attr('data-time', lyric.time);
       $(text).text(lyric.text);
-      text.title = lyric.timeText;
       lyricViewDiv.append(text);
     });
+    
+    scroll.onViewUpdate();
   }
 }
 
 function LyricWindow() {
+}
+
+function Scroll(content, step) {
+  var scrollBar = $(content).next('.scrollBar');
+  var scrollElem = scrollBar.find('.scroll');
+  var scrollBaseTop = parseInt(scrollElem.css('top'));
+
+  var height = 20;
+  var scrollSpeed = 0;
+  var contentHeight = 0;
+  
+  scrollBar.hide();
+  
+  /*
+  scrollBar.click(function(event) {
+    var posY = event.clientY - parseInt(scrollBar.css('top'));
+    scrollElem.css('top', posY - height / 2);
+    $(content).scrollTop(posY * step);
+  });*/
+  
+  $(content).bind('mousewheel', function(event) {
+    var top = $(this).scrollTop();
+
+    if (event.deltaY > 0) {
+      if (top <= 0)
+        return;
+    } else if (top >= contentHeight + step) {
+        return;
+    }
+
+    top += (event.deltaY * step * -1);
+    $(this).scrollTop(top);
+    
+    var scrollTop = parseInt(scrollElem.css('top')) + (event.deltaY * scrollSpeed * -1);
+    if (scrollTop < 0)
+      scrollTop = 0;
+    scrollElem.css('top', scrollTop);
+  });
+  
+  this.onViewUpdate = function() {
+    contentHeight = 0;
+    $(content).children().each(function() {
+      contentHeight += $(this).height();
+    });
+    scrollSpeed = ($(content).height() - height) / contentHeight * step;
+    //scrollBar.show();
+  }
+  
+  this.animateScrollTopTo = function(top, speed) {
+    var oldTop = $(content).scrollTop();
+    var dir = Math.sign(top - oldTop);//1=down,-1=up
+    $(content).animate({'scrollTop': top}, speed, 'swing');
+    
+    var scrollTop = top / scrollSpeed * dir;
+    $(scrollElem).animate({'top': scrollTop}, speed, 'swing');
+  }
+  
+  function scrollTopTo(top) {
+    //onScrollChanged
+  }
 }
 
 /*

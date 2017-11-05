@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>歌词同步</title>
-        
+        <link rel="shortcut icon" href="favicon.png">
         <link rel="stylesheet" type="text/css" href="res/style.css" />
     </head>
     <body>
@@ -21,7 +21,9 @@
         <div id="playList">
           <div id="songList"></div>
           <div id="lyricView">
-            <div></div>
+          </div>
+          <div class="scrollBar">
+            <div class="scroll"></div>
           </div>
         </div>
         
@@ -36,12 +38,13 @@
           </div>
           -->
           <!--<div id="time"></div>-->
-          <audio id="audio" controls="controls"></audio>
+          <video id="audio" controls="controls"></video>
           <!--<a class="icon" href="javascript:;" hidefocus="true" data-action="mode" title="循环">循环</a>-->
         </div>
         
         <script src="signals.min.js"></script>
         <script src="jquery-3.1.1.min.js"></script>
+        <script src="jquery.mousewheel.min.js"></script>
         <script src="config.js"></script>
         <script src="player.js"></script>
     </body>
