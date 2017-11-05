@@ -77,50 +77,6 @@ function PlayList() {
   this.signals = {
     songSelected: new signals.Signal()
   };
-  /*
-  var openAudioUrlButton = document.getElementById('openAudioUrl');
-  openAudioUrlButton.onclick = function() {
-    var url = document.getElementById('audioUrl').value.trim();
-    if (!url)
-      return;
-    playList.addPlay(
-      new Song({
-        url: url
-      }));
-  }
-
-
-  var openLyricUrlButton = document.getElementById('openLyricUrl');
-  openLyricUrlButton.onclick = function() {
-    var url = document.getElementById('lyricUrl').value.trim();
-    if (!url)
-      return;
-  }
-  
-  var openLyricFileButton = document.getElementById('openLyricFile');
-  openLyricFileButton.onclick = function() {
-    var fileUpload = document.getElementById('file');
-    fileUpload.addEventListener('change', function() {
-      var file = this.files[0];
-      //var type = file.type.split('/')[0];
-      var src = this.value;
-      var ext = src.substring(src.lastIndexOf('.') + 1);
-      // 检查是否是lrc文件
-      if (ext != 'lrc') {
-        alert('该文件不是lrc歌词格式文件!');
-        return;
-      }
-      
-      var reader = new FileReader();
-      reader.onload = function() {
-        lyricReader.readString(this.result);
-      };
-      reader.readAsText(file);
-      
-    });
-    fileUpload.click();
-  }
-  */
   
   this.setPlayer = function(_player) {
     player = _player;
