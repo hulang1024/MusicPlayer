@@ -165,6 +165,7 @@ function Player(playList) {
   init();
   
   function init() {
+    $('#player').show();
     $('#audio').css('left', ($(window).width() - $('#audio').width()) / 2);
     // 为按钮绑定事件处理
     $('#player [data-action]').each(function(){
@@ -177,7 +178,7 @@ function Player(playList) {
     }).mouseout(function() {
       hovered = false;
     });
-    
+
     displayTime(0,0);
     
     audio.onloadeddata = function() {
@@ -399,17 +400,20 @@ function LyricView(player) {
   
   function onSeeked(time) {
     var i = 0;
-    while (i < lyricList.length && lyricList[i].time < time) {
+    while (i < lyricList.length && lyricList[i].time <= time) {
       i++;
     }
     currentIndex = i;
+    lyricViewDiv.find('[data-time=' + lyricList[lastIndex].time + ']').removeClass('sel');
+    lyricWindowDiv.text('');
+    onTimeUpdate(time, false);
   }
   
   function onTimeUpdate(updateMS, seeking) {
     if(seeking)
       return;
     if (currentIndex > lyricList.length - 1 || updateMS < lyricList[currentIndex].time) {
-      lastUpdateMS = updateMS;
+      //lastUpdateMS = updateMS;
       return;
     }
     
@@ -420,7 +424,7 @@ function LyricView(player) {
     lastIndex = currentIndex;
     currentIndex++;
     
-    lastUpdateMS = updateMS;
+    //lastUpdateMS = updateMS;
   }
   
   function gotoLyric(index, speed) {
@@ -443,7 +447,7 @@ function LyricView(player) {
     lyricWindowDiv.text('');
     lastIndex = 0;
     currentIndex = 0;
-    lastUpdateMS = 0;
+    //lastUpdateMS = 0;
   }
   
   function draw() {
@@ -565,7 +569,7 @@ function LyricReader() {
                 if (parts[1].indexOf('.') != -1) {
                   var t = parts[1].split('.');
                   seconds = parseInt(t[0]);
-                  if (t[0][0] == '-') //TODO: 不支持负数
+                  if (t[0][0] == '-')
                     return;
                   xx = parseInt(t[1]);
                 } else {
