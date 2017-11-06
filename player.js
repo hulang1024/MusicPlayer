@@ -175,8 +175,6 @@ function Player(playList) {
   init();
   
   function init() {
-    $('#player').show();
-    $('#audio').css('left', ($(window).width() - $('#audio').width()) / 2);
     // 为按钮绑定事件处理
     $('#player [data-action]').each(function(){
       $(this).click(function(){
@@ -188,6 +186,11 @@ function Player(playList) {
     }).mouseout(function() {
       hovered = false;
     });
+    $('#player').show();
+    
+    resize();
+    
+    window.addEventListener('resize', resize);
 
     displayTime(0,0);
     
@@ -377,6 +380,10 @@ function Player(playList) {
     var durSeconds = duration % 60;
     timeDisplay.html('<em>' + padNN(curMinutes) + ':' + padNN(curSeconds) + '</em> / '
       + padNN(durMinutes) + ':' + padNN(durSeconds));
+  }
+  
+  function resize() {
+    $('#audio').css('left', ($(window).width() - $('#audio').width()) / 2);
   }
 }
 
@@ -592,7 +599,7 @@ function Scroll(content, step) {
   
   this.animateScrollTopTo = function(top, speed) {
     var oldTop = $(content).scrollTop();
-    var dir = Math.sign(top - oldTop);//1=down,-1=up
+    var dir = top - oldTop > 0 ? 1 : -1;//1=down,-1=up
     $(content).animate({'scrollTop': top}, {queue: false, speed: speed}, 'swing');
     
     var scrollTop = top / scrollSpeed * dir;
