@@ -397,12 +397,12 @@ function LyricListView(player, lyricLoader) {
   });
   
   player.signals.loadeddata.add(function(song) {
-    player.signals.timeupdate.add(onTimeUpdate);
-    player.signals.seeked.add(onSeeked);
-    
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
       draw();
+      
+      player.signals.timeupdate.add(onTimeUpdate);
+      player.signals.seeked.add(onSeeked);
     });
   });
   
@@ -496,11 +496,11 @@ function LyricWindow(player, lyricLoader) {
   });
   
   player.signals.loadeddata.add(function(song) {
-    player.signals.timeupdate.add(onTimeUpdate);
-    player.signals.seeked.add(onSeeked);
-    
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
+      
+      player.signals.timeupdate.add(onTimeUpdate);
+      player.signals.seeked.add(onSeeked);
     });
   });
   
