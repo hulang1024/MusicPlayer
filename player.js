@@ -202,7 +202,7 @@ function Player(playList) {
     }
     
     audio.ontimeupdate = function() {
-      player.signals.timeupdate.dispatch( Math.round(this.currentTime * 1000) );
+      player.signals.timeupdate.dispatch( Math.round(this.currentTime * 1000), this.seeking);
       
       displayTime(this.duration, this.currentTime);
     }
@@ -392,25 +392,23 @@ function LyricView(player) {
     req.send(null);
   });
   player.signals.timeupdate.add(onTimeUpdate);
-  player.signals.seeking.add(onSeeking);
   player.signals.seeked.add(onSeeked);
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
   player.signals.next.add(reset);
   
-  function onSeeking(time) {
-  }
-  
   function onSeeked(time) {
-    for (var i = 0; i < lyricList.length; i++) {
-      if (time >= lyricList[i].time)
-        break;
+    var i = 0;
+    while (i < lyricList.length && lyricList[i].time < time) {
+      i++;
     }
     currentIndex = i;
   }
   
-  function onTimeUpdate(updateMS) {
-    if (updateMS < lyricList[currentIndex].time) {
+  function onTimeUpdate(updateMS, seeking) {
+    if(seeking)
+      return;
+    if (currentIndex > lyricList.length - 1 || updateMS < lyricList[currentIndex].time) {
       lastUpdateMS = updateMS;
       return;
     }
@@ -513,10 +511,10 @@ function Scroll(content, step) {
   this.animateScrollTopTo = function(top, speed) {
     var oldTop = $(content).scrollTop();
     var dir = Math.sign(top - oldTop);//1=down,-1=up
-    $(content).animate({'scrollTop': top}, speed, 'swing');
+    $(content).animate({'scrollTop': top}, {queue: false, speed: speed}, 'swing');
     
     var scrollTop = top / scrollSpeed * dir;
-    $(scrollElem).animate({'top': scrollTop}, speed, 'swing');
+  $(scrollElem).animate({'top': scrollTop}, {queue: false, speed: speed}, 'swing');
   }
   
   function scrollTopTo(top) {
