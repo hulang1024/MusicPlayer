@@ -5,11 +5,15 @@
 author: HuLang
 */
 window.onload = function() {
+  new MusicPlayer();
+}
+
+function MusicPlayer() {
   var playList = new PlayList();
   var player = new Player(playList);
-  var lyricView = new LyricView(player);
-  var lyricWindow = new LyricWindow(player);
-  
+  var lyricLoader = new LyricLoader();
+  var lyricListView = new LyricListView(player, lyricLoader);
+  var lyricWindow = new LyricWindow(player, lyricLoader);
   playList.setPlayer(player);
   playList.init();
   
@@ -364,33 +368,22 @@ function Player(playList) {
   }
 }
 
-function LyricView(player) {
+function LyricListView(player, lyricLoader) {
   var lyricViewDiv = $('#lyricView');
   var lyricViewHeight = $('#lyricView').height();
   var lyricTextHeight = 38;
-  var lyricWindowDiv = $('#lyricWindow');
   
   var lyricList = null;
-  var lastUpdateMS = 0;
   var lastIndex = 0, currentIndex = 0;
-  var lyricReader = new LyricReader();
   
   var scroll = new Scroll('#lyricView', lyricTextHeight);
 
-  player.signals.loaded.add(function(song, mode) {
-    var req = new XMLHttpRequest();
-    req.open('GET', song.lrcUrl, true);
-    req.addEventListener('load', function(event){
-      var content = event.target.responseText;
-      
-      lyricReader.addReadListener(function(){
-        lyricList = lyricReader.getSortedTimeTextList();
-        reset();
-        draw();
-      });
-      lyricReader.readString(content);
+  player.signals.loaded.add(function(song) {
+    lyricLoader.load(song, function(lyric) {
+      lyricList = lyric.getSortedTimeTextList();
+      reset();
+      draw();
     });
-    req.send(null);
   });
   player.signals.timeupdate.add(onTimeUpdate);
   player.signals.seeked.add(onSeeked);
@@ -399,38 +392,48 @@ function LyricView(player) {
   player.signals.next.add(reset);
   
   function onSeeked(time) {
-    var i = 0;
-    while (i < lyricList.length && lyricList[i].time <= time) {
-      i++;
+    // 找出大于等于当前时间点time的歌词的索引
+    var index = 0;
+    while (index < lyricList.length && lyricList[index].time < time) {
+      index++;
     }
-    currentIndex = i;
-    lyricViewDiv.find('[data-time=' + lyricList[lastIndex].time + ']').removeClass('sel');
-    lyricWindowDiv.text('');
+    currentIndex = index;
+    
+    unselectLyric(lyricList[lastIndex].time);
+    
+    if (currentIndex > 0) {
+      selectLyric(lyricList[currentIndex - 1].time);
+      lastIndex = currentIndex - 1;
+      scrollToLyric(currentIndex - 1, 1);
+    }
     onTimeUpdate(time, false);
   }
   
   function onTimeUpdate(updateMS, seeking) {
-    if(seeking)
+    if (seeking)
       return;
-    if (currentIndex > lyricList.length - 1 || updateMS < lyricList[currentIndex].time) {
-      //lastUpdateMS = updateMS;
+    if (currentIndex > lyricList.length - 1)
       return;
-    }
+    if (updateMS < lyricList[currentIndex].time)
+      return;
     
-    gotoLyric(currentIndex, 'slow');
-    
-    lyricWindowDiv.text(lyricList[currentIndex].text);
+    unselectLyric(lyricList[lastIndex].time);
+    selectLyric(lyricList[currentIndex].time);
+    scrollToLyric(currentIndex, 'slow');
     
     lastIndex = currentIndex;
     currentIndex++;
-    
-    //lastUpdateMS = updateMS;
   }
   
-  function gotoLyric(index, speed) {
-    lyricViewDiv.find('[data-time=' + lyricList[lastIndex].time + ']').removeClass('sel');
-    lyricViewDiv.find('[data-time=' + lyricList[index].time + ']').addClass('sel');
-    
+  function unselectLyric(time) {
+    lyricViewDiv.find('[data-time=' + time + ']').removeClass('sel');
+  }
+  
+  function selectLyric(time) {
+    lyricViewDiv.find('[data-time=' + time + ']').addClass('sel');
+  }
+  
+  function scrollToLyric(index, speed) {
     if (index < Math.floor(lyricViewHeight / lyricTextHeight) / 2) {
       var top = parseInt(lyricViewDiv.scrollTop());
       if (top != 0) {
@@ -444,10 +447,8 @@ function LyricView(player) {
   
   function reset() {
     lyricViewDiv.text('');
-    lyricWindowDiv.text('');
     lastIndex = 0;
     currentIndex = 0;
-    //lastUpdateMS = 0;
   }
   
   function draw() {
@@ -463,7 +464,57 @@ function LyricView(player) {
   }
 }
 
-function LyricWindow() {
+function LyricWindow(player, lyricLoader) {
+  var lyricList = null;
+  var lastIndex = 0, currentIndex = 0;
+  var lyricWindowDiv = $('#lyricWindow');
+
+  player.signals.loaded.add(function(song) {
+    lyricLoader.load(song, function(lyric) {
+      lyricList = lyric.getSortedTimeTextList();
+      reset();
+    });
+  });
+  player.signals.timeupdate.add(onTimeUpdate);
+  player.signals.seeked.add(onSeeked);
+  player.signals.ended.add(reset);
+  player.signals.prev.add(reset);
+  player.signals.next.add(reset);
+  
+  function onSeeked(time) {
+    // 找出大于等于当前时间点time的歌词的索引
+    var index = 0;
+    while (index < lyricList.length && lyricList[index].time < time) {
+      index++;
+    }
+    currentIndex = index;
+    
+    lyricWindowDiv.text('');
+    if (currentIndex > 0) {
+      lyricWindowDiv.text(lyricList[currentIndex - 1].text);
+    }
+    onTimeUpdate(time, false);
+  }
+  
+  function onTimeUpdate(updateMS, seeking) {
+    if (seeking)
+      return;
+    if (currentIndex > lyricList.length - 1)
+      return;
+    if (updateMS < lyricList[currentIndex].time)
+      return;
+    
+    lyricWindowDiv.text(lyricList[currentIndex].text);
+    
+    lastIndex = currentIndex;
+    currentIndex++;
+  }
+  
+  function reset() {
+    lyricWindowDiv.text('');
+    lastIndex = 0;
+    currentIndex = 0;
+  }
 }
 
 function Scroll(content, step) {
@@ -526,16 +577,81 @@ function Scroll(content, step) {
   }
 }
 
+
 /*
-歌词读取器
+歌词加载器
+提供缓存优化
 */
-function LyricReader() {
+function LyricLoader() {
+  var lyric = null;
+  var lastUrl = null;
+  
+  var wait = 0;
+  var loadedSignal = new signals.Signal();
+  
+  this.load = function(song, callback) {
+    if (lastUrl == song.lrcUrl) {
+      if (wait) {
+        loadedSignal.add(function(lyric) {
+          callback(lyric);
+        });
+        return;
+      } else {
+        return callback(lyric);
+      }
+    }
+
+    wait = 1;
+    var req = new XMLHttpRequest();
+    req.open('GET', song.lrcUrl, true);
+    req.addEventListener('load', function(event){
+      var content = event.target.responseText;
+      lyric = new LyricParser().fromString(content);
+      callback(lyric);
+      loadedSignal.dispatch(lyric);
+      loadedSignal.removeAll();
+      wait = 0;
+    });
+    
+    req.send(null);
+    
+    lastUrl = song.lrcUrl;
+  }
+}
+
+/*
+歌词
+*/
+function Lyric() {
   var timeTextList = []; //时间标签列表 [{time:绝对毫秒,text:文本},...]
   var idMap = {}; // 标识标签map
   
-  this.readString = function(str) {
-    timeTextList = [];
-    idMap = {};
+  
+  this.setTimeTextList = function(list) {
+    timeTextList = list;
+  }
+  
+  this.getSortedTimeTextList = function() {
+    timeTextList.sort(function(x, y){ return x.time - y.time; });
+    return timeTextList;
+  }
+  
+  this.setIdMap = function(map) {
+    idMap = map;
+  }
+  
+  this.getIdValue = function(id) {
+    return idMap[id];
+  }
+}
+
+/*
+歌词读取器
+*/
+function LyricParser() {
+  this.fromString = function(str) {
+    var timeTextList = [];
+    var idMap = {};
     
     var lines = str.split('\n');
     
@@ -594,26 +710,13 @@ function LyricReader() {
           }
         }
       }
-    })
+    });
     
-    
-    timeTextList.sort(function(x, y){ return x.time - y.time; });
-        
-    readListener();
-  }
-  
-  var readListener;
-  
-  this.addReadListener = function(func) {
-    readListener = func;
-  }
+    var lyric = new Lyric();
+    lyric.setTimeTextList(timeTextList);
+    lyric.setIdMap(idMap);
 
-  this.getSortedTimeTextList = function() {
-    return timeTextList;
-  }
-  
-  this.getIdValue = function(id) {
-    return idMap[id];
+    return lyric;
   }
 }
 
