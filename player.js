@@ -390,14 +390,20 @@ function LyricListView(player, lyricLoader) {
   
   var scroll = new Scroll('#lyricView', lyricTextHeight);
   
-  player.signals.loadstart.add(reset);
+  player.signals.loadstart.add(function() {
+    player.signals.timeupdate.remove(onTimeUpdate);
+    reset();
+  });
+  
   player.signals.loadeddata.add(function(song) {
+    player.signals.timeupdate.add(onTimeUpdate);
+    
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
       draw();
     });
   });
-  player.signals.timeupdate.add(onTimeUpdate);
+  
   player.signals.seeked.add(onSeeked);
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
@@ -481,13 +487,19 @@ function LyricWindow(player, lyricLoader) {
   var lastIndex = 0, currentIndex = 0;
   var lyricWindowDiv = $('#lyricWindow');
   
-  player.signals.loadstart.add(reset);
+  player.signals.loadstart.add(function() {
+    player.signals.timeupdate.remove(onTimeUpdate);
+    reset();
+  });
+  
   player.signals.loadeddata.add(function(song) {
+    player.signals.timeupdate.add(onTimeUpdate);
+    
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
     });
   });
-  player.signals.timeupdate.add(onTimeUpdate);
+  
   player.signals.seeked.add(onSeeked);
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
