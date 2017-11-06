@@ -123,6 +123,7 @@ a {
   width: 12px;
   height: 500px;
   border: 1px solid black;
+  display: none;
 }
 
 .scroll {
