@@ -392,11 +392,13 @@ function LyricListView(player, lyricLoader) {
   
   player.signals.loadstart.add(function() {
     player.signals.timeupdate.remove(onTimeUpdate);
+    player.signals.seeked.remove(onSeeked);
     reset();
   });
   
   player.signals.loadeddata.add(function(song) {
     player.signals.timeupdate.add(onTimeUpdate);
+    player.signals.seeked.add(onSeeked);
     
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
@@ -404,7 +406,7 @@ function LyricListView(player, lyricLoader) {
     });
   });
   
-  player.signals.seeked.add(onSeeked);
+  
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
   player.signals.next.add(reset);
@@ -464,13 +466,13 @@ function LyricListView(player, lyricLoader) {
   }
   
   function reset() {
-    lyricViewDiv.text('');
+    lyricViewDiv.html('');
     lastIndex = 0;
     currentIndex = 0;
   }
   
   function draw() {
-    lyricViewDiv.text('');
+    lyricViewDiv.html('');
     lyricList.forEach(function(lyric) {
       var text = $(document.createElement('p'));
       text.attr('data-time', lyric.time);
@@ -489,18 +491,19 @@ function LyricWindow(player, lyricLoader) {
   
   player.signals.loadstart.add(function() {
     player.signals.timeupdate.remove(onTimeUpdate);
+    player.signals.seeked.remove(onSeeked);
     reset();
   });
   
   player.signals.loadeddata.add(function(song) {
     player.signals.timeupdate.add(onTimeUpdate);
+    player.signals.seeked.add(onSeeked);
     
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
     });
   });
   
-  player.signals.seeked.add(onSeeked);
   player.signals.ended.add(reset);
   player.signals.prev.add(reset);
   player.signals.next.add(reset);
