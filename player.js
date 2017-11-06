@@ -160,7 +160,7 @@ function Player(playList) {
   var hovered = false;
   
   this.signals = {};
-  ['timeupdate', 'loaded', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
+  ['timeupdate', 'loadeddata', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
     player.signals[name] = new signals.Signal();
   });
   
@@ -186,9 +186,10 @@ function Player(playList) {
     displayTime(0,0);
     
     audio.onloadeddata = function() {
+      console.log('loadeddata');
       displayTime(this.duration, this.currentTime);
       
-      player.signals.loaded.dispatch(playList.getSong(songSelectedIndex), mode);
+      player.signals.loadeddata.dispatch(playList.getSong(songSelectedIndex), mode);
     }
     
     // 当用户点击Audio开始按钮可导致onplay
@@ -378,10 +379,10 @@ function LyricListView(player, lyricLoader) {
   
   var scroll = new Scroll('#lyricView', lyricTextHeight);
 
-  player.signals.loaded.add(function(song) {
+  player.signals.loadeddata.add(function(song) {
+    reset();
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
-      reset();
       draw();
     });
   });
@@ -469,10 +470,10 @@ function LyricWindow(player, lyricLoader) {
   var lastIndex = 0, currentIndex = 0;
   var lyricWindowDiv = $('#lyricWindow');
 
-  player.signals.loaded.add(function(song) {
+  player.signals.loadeddata.add(function(song) {
+    reset();
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
-      reset();
     });
   });
   player.signals.timeupdate.add(onTimeUpdate);
