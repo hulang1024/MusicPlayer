@@ -160,7 +160,13 @@ function Player(playList) {
   var hovered = false;
   
   this.signals = {};
-  ['timeupdate', 'loadeddata', 'played', 'paused', 'ended', 'seeking', 'seeked', 'prev', 'next'].forEach(function(name) {
+  
+  var signalNames = [
+    'loadstart', 'loadeddata',
+    'played', 'timeupdate', 'paused', 'ended', 'seeking', 'seeked',
+    'prev', 'next'
+  ];
+  signalNames.forEach(function(name) {
     player.signals[name] = new signals.Signal();
   });
   
@@ -184,6 +190,11 @@ function Player(playList) {
     });
 
     displayTime(0,0);
+    
+    audio.onloadstart = function() {
+      console.log('loadstart');
+      player.signals.loadstart.dispatch();
+    }
     
     audio.onloadeddata = function() {
       console.log('loadeddata');
@@ -378,9 +389,9 @@ function LyricListView(player, lyricLoader) {
   var lastIndex = 0, currentIndex = 0;
   
   var scroll = new Scroll('#lyricView', lyricTextHeight);
-
+  
+  player.signals.loadstart.add(reset);
   player.signals.loadeddata.add(function(song) {
-    reset();
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
       draw();
@@ -469,9 +480,9 @@ function LyricWindow(player, lyricLoader) {
   var lyricList = null;
   var lastIndex = 0, currentIndex = 0;
   var lyricWindowDiv = $('#lyricWindow');
-
+  
+  player.signals.loadstart.add(reset);
   player.signals.loadeddata.add(function(song) {
-    reset();
     lyricLoader.load(song, function(lyric) {
       lyricList = lyric.getSortedTimeTextList();
     });
