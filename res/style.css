@@ -75,21 +75,22 @@ a {
   position: absolute;
   top: 8px;
   right: 8px;
-  height: 500px;
   width: 60%;
+  height: 500px;
+  margin: 30px 0 30px 0;
   overflow-y: hidden;
   background: white;
 }
 
 #lyricView>p {
-  height: 28px;
-  line-height: 28px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  height: auto !important;
+  line-height: 38px;
+  min-height: 38px;
   margin: 0px;
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
+  word-wrap: break-word;
   color: #989898;
 }
 #lyricView p.sel {
@@ -104,14 +105,14 @@ a {
 #lyricWindow {
   position: absolute;
   z-index: 10;
-  top: 50%;
   width: 98%;
-  height: 64px;
+  height: auto !important;
   font-size: 3em;
   font-family: Arial, Helvetica, sans-serif;
   text-shadow: 2px 3px 2px black;
   color: black;
   text-align: center;
+  word-wrap: break-word;
 }
 #lyricWindow.over {
   border: 1px solid black;
