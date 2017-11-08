@@ -1,9 +1,6 @@
-﻿"use strict";
+﻿// JS严格模式
+"use strict";
 
-/*
-音乐播放器主程序
-author: HuLang
-*/
 window.onload = function() {
   new MusicPlayer();
 }
