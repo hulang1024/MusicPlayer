@@ -82,10 +82,6 @@ function PlayList() {
     req.send(null);
   };
   
-  this.addPlay = function(song) {
-    songs.add(song);
-  }
-  
   this.select = function(index) {
     if (songs.length <= 0)
       return;
