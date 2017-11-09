@@ -59,7 +59,20 @@ function PlayList() {
       songs = JSON.parse(json);
       draw();
       
-      playList.select(0);
+      var index = 0;
+      var params = getURLParamMap(window.location.search);
+      if (!isNaN(params['song-index'])) {
+        index = parseInt(params['song-index']);
+      }
+      if (params['time']) {
+        player.signals.loadeddata.addOnce(function() {
+          player.setCurrentTime(parseInt(params['time']));
+          if (params['play']) {
+            player.play();
+          }
+        });
+      }
+      playList.select(index);
     });
     req.send(null);
   };
@@ -69,10 +82,11 @@ function PlayList() {
   }
   
   this.select = function(index) {
-    if (songs.length == 0)
+    if (songs.length <= 0)
       return;
     select(index);
-    player.load(index);
+    var song = this.getSong(index);
+    player.load(song);
   }
 
   this.getSong = function(index) {
@@ -223,16 +237,11 @@ function Player(playList) {
     }
   }
   
-  this.load = function(index) {
-    songSelectedIndex = index;
-    var song = playList.getSong(index);
+  this.load = function(song) {
     audio.src = song.url;
   }
   
   this.play = function(index) {
-    songSelectedIndex = index;
-    var song = playList.getSong(index);
-    audio.src = song.url;
     audio.play();
   }
   
@@ -312,6 +321,9 @@ function Player(playList) {
     $(audio).animate({bottom: 0}, 100);
   }
   
+  this.setCurrentTime = function(currentTime) {
+    audio.currentTime = currentTime;
+  }
   this.getCurrentTime = function() {
     return audio.currentTime * 1000;
   }
@@ -401,3 +413,17 @@ function randInt(m, n) {
   return Math.floor(Math.random() * (m + n)) - m;
 }
 
+function getURLParamMap(url) {
+  //解析参数map
+  var param = url.substr(url.lastIndexOf("?") + 1);
+  if (!param)
+    return {};
+  
+  param = param.split("&");
+  var paramMap = {};
+  param.map(function(p){
+    var pairs = p.split("=");
+    paramMap[pairs[0]] = pairs[1];
+  });
+  return paramMap;
+}
