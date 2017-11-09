@@ -57,8 +57,10 @@ function PlayList() {
     req.addEventListener('load', function(event){
       var json = event.target.responseText;
       songs = JSON.parse(json);
+      
       draw();
       
+      // 处理地址栏参数
       var index = 0;
       var params = getURLParamMap(window.location.search);
       if (!isNaN(params['song-index'])) {
@@ -67,11 +69,14 @@ function PlayList() {
       if (params['time']) {
         player.signals.loadeddata.addOnce(function() {
           player.setCurrentTime(parseInt(params['time']));
-          if (params['play']) {
-            player.play();
-          }
         });
       }
+      if (params['play']) {
+        player.signals.loadeddata.addOnce(function() {
+          player.play();
+        });
+      }
+      
       playList.select(index);
     });
     req.send(null);
@@ -84,9 +89,7 @@ function PlayList() {
   this.select = function(index) {
     if (songs.length <= 0)
       return;
-    select(index);
-    var song = this.getSong(index);
-    player.load(song);
+    player.load(index);
   }
 
   this.getSong = function(index) {
@@ -237,7 +240,9 @@ function Player(playList) {
     }
   }
   
-  this.load = function(song) {
+  this.load = function(index) {
+    songSelectedIndex = index;
+    var song = playList.getSong(index);
     audio.src = song.url;
   }
   
