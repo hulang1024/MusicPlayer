@@ -63,7 +63,7 @@ a {
   overflow: hidden;
   background: black;
   font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Microsoft YaHei";
   color: #989898;
   cursor: pointer;
 }
@@ -87,19 +87,90 @@ a {
   line-height: 38px;
   min-height: 38px;
   margin: 0px;
-  font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-family: "Microsoft YaHei";
   text-align: center;
   word-wrap: break-word;
-  color: #989898;
+  color: gray;
 }
 #lyricView p.sel {
-  color: black;
-  font-size: 16px;
+  color: #FF9900;
+  font-size: 18px;
   -webkit-transition: color 0.7s linear;
   -moz-transition: color 0.7s linear;
   -o-transition: color 0.7s linear;
   transition: color 0.7s linear;
+}
+
+
+@-webkit-keyframes neon2 {
+  from {
+    text-shadow: 0 0 10px #fff,
+               0 0 20px  #fff,
+               0 0 30px  #fff,
+               0 0 40px  #228DFF,
+               0 0 70px  #228DFF,
+               0 0 80px  #228DFF,
+               0 0 100px #228DFF,
+               0 0 150px #228DFF;
+  }
+  to {
+    text-shadow: 0 0 5px #fff,
+               0 0 10px #fff,
+               0 0 15px #fff,
+               0 0 20px #228DFF,
+               0 0 35px #228DFF,
+               0 0 40px #228DFF,
+               0 0 50px #228DFF,
+               0 0 75px #228DFF;
+  }
+}
+/*glow for mozilla*/
+@-moz-keyframes neon2 {
+  from {
+    text-shadow: 0 0 10px #fff,
+               0 0 20px  #fff,
+               0 0 30px  #fff,
+               0 0 40px  #228DFF,
+               0 0 70px  #228DFF,
+               0 0 80px  #228DFF,
+               0 0 100px #228DFF,
+               0 0 150px #228DFF;
+  }
+  to {
+    text-shadow: 0 0 5px #fff,
+               0 0 10px #fff,
+               0 0 15px #fff,
+               0 0 20px #228DFF,
+               0 0 35px #228DFF,
+               0 0 40px #228DFF,
+               0 0 50px #228DFF,
+               0 0 75px #228DFF;
+  }
+}
+
+/*glow*/
+@keyframes neon2 {
+  from {
+    text-shadow: 0 0 10px #fff,
+               0 0 20px  #fff,
+               0 0 30px  #fff,
+               0 0 40px  #228DFF,
+               0 0 70px  #228DFF,
+               0 0 80px  #228DFF,
+               0 0 100px #228DFF,
+               0 0 150px #228DFF;
+  }
+  to {
+    text-shadow: 0 0 5px #fff,
+               0 0 10px #fff,
+               0 0 15px #fff,
+               0 0 20px #228DFF,
+               0 0 35px #228DFF,
+               0 0 40px #228DFF,
+               0 0 50px #228DFF,
+               0 0 75px #228DFF;
+  }
 }
 
 #lyricWindow {
@@ -107,13 +178,17 @@ a {
   z-index: 10;
   width: 98%;
   height: auto !important;
-  font-size: 3em;
-  font-family: Arial, Helvetica, sans-serif;
-  text-shadow: 2px 3px 2px black;
+  font-size: 3.5em;
+  font-family: "Microsoft YaHei";
   color: black;
   text-align: center;
   word-wrap: break-word;
+  
+  -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
+  -moz-animation: neon2 1.5s ease-in-out infinite alternate;
+  animation: neon2 1.5s ease-in-out infinite alternate; 
 }
+
 #lyricWindow.over {
   border: 1px solid black;
 }
