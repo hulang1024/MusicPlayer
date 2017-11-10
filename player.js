@@ -107,7 +107,8 @@ function PlayList() {
       li.click(function() {
         var index = $(this).data('index');
         select(index);
-        player.play(index);
+        player.load(index);
+        player.play();
       });
       
       ul.append(li);
