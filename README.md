@@ -30,7 +30,7 @@
 
 项目文件说明（目前）
 ------------------
-* [res/songs.json](res/songs.json) 描述歌曲数据，例子：
+* [res/songs.json](/res/songs.json) 描述歌曲数据，例子：
 ```js
 [
   {"name": "告白气球",
@@ -51,7 +51,7 @@
 ]
 ```
 
-* [res/lrc](res/lrc) 其中\*.lrc是纯LRC格式歌词文件；\*.json文件中也包含LRC，但包含歌词的翻译版本，JSON语法：
+* [res/lrc](/res/lrc) 其中\*.lrc是纯LRC格式歌词文件；\*.json文件中也包含LRC，但包含歌词的翻译版本，JSON语法：
 ```js
 {
   "lyric": "[by:x]Look[00:01.80]Look..." //原始版本的LRC
@@ -61,7 +61,7 @@
 * [config.js](config.js) 配置，包含歌曲数据源URL：
 ```js
 var CONFIG = {
-  songsUrl: 'https://raw.githubusercontent.com/hulang1024/MusicPlayer/master/res/songs.json'
+  songsUrl: 'https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/songs.json'
 };
 ```
 
