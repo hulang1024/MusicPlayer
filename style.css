@@ -72,12 +72,10 @@ a {
 }
 
 #lyricView {
-  position: absolute;
   top: 8px;
-  right: 8px;
   width: 60%;
   height: 500px;
-  margin: 30px 0 30px 0;
+  margin: 30px auto;
   overflow-y: hidden;
   background: white;
 }
@@ -87,90 +85,19 @@ a {
   line-height: 38px;
   min-height: 38px;
   margin: 0px;
-  font-size: 15px;
-  font-family: "Microsoft YaHei";
+  font-size: 17px;
+  font-family: cursive;
   text-align: center;
   word-wrap: break-word;
   color: gray;
 }
 #lyricView p.sel {
-  color: #FF9900;
-  font-size: 18px;
+  color: #ec90b9;
+  font-size: 22px;
   -webkit-transition: color 0.7s linear;
   -moz-transition: color 0.7s linear;
   -o-transition: color 0.7s linear;
   transition: color 0.7s linear;
-}
-
-
-@-webkit-keyframes neon2 {
-  from {
-    text-shadow: 0 0 10px #fff,
-               0 0 20px  #fff,
-               0 0 30px  #fff,
-               0 0 40px  #228DFF,
-               0 0 70px  #228DFF,
-               0 0 80px  #228DFF,
-               0 0 100px #228DFF,
-               0 0 150px #228DFF;
-  }
-  to {
-    text-shadow: 0 0 5px #fff,
-               0 0 10px #fff,
-               0 0 15px #fff,
-               0 0 20px #228DFF,
-               0 0 35px #228DFF,
-               0 0 40px #228DFF,
-               0 0 50px #228DFF,
-               0 0 75px #228DFF;
-  }
-}
-/*glow for mozilla*/
-@-moz-keyframes neon2 {
-  from {
-    text-shadow: 0 0 10px #fff,
-               0 0 20px  #fff,
-               0 0 30px  #fff,
-               0 0 40px  #228DFF,
-               0 0 70px  #228DFF,
-               0 0 80px  #228DFF,
-               0 0 100px #228DFF,
-               0 0 150px #228DFF;
-  }
-  to {
-    text-shadow: 0 0 5px #fff,
-               0 0 10px #fff,
-               0 0 15px #fff,
-               0 0 20px #228DFF,
-               0 0 35px #228DFF,
-               0 0 40px #228DFF,
-               0 0 50px #228DFF,
-               0 0 75px #228DFF;
-  }
-}
-
-/*glow*/
-@keyframes neon2 {
-  from {
-    text-shadow: 0 0 10px #fff,
-               0 0 20px  #fff,
-               0 0 30px  #fff,
-               0 0 40px  #228DFF,
-               0 0 70px  #228DFF,
-               0 0 80px  #228DFF,
-               0 0 100px #228DFF,
-               0 0 150px #228DFF;
-  }
-  to {
-    text-shadow: 0 0 5px #fff,
-               0 0 10px #fff,
-               0 0 15px #fff,
-               0 0 20px #228DFF,
-               0 0 35px #228DFF,
-               0 0 40px #228DFF,
-               0 0 50px #228DFF,
-               0 0 75px #228DFF;
-  }
 }
 
 #lyricWindow {
@@ -183,10 +110,7 @@ a {
   color: black;
   text-align: center;
   word-wrap: break-word;
-  
-  -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
-  -moz-animation: neon2 1.5s ease-in-out infinite alternate;
-  animation: neon2 1.5s ease-in-out infinite alternate; 
+  text-shadow: 0.1em 0.1em 0.2em gray
 }
 
 #lyricWindow.over {
