@@ -1,4 +1,9 @@
 [
+  {"name": "温柔乡",
+   "artist": "陈雅森",
+   "url": "http://og11a17b0.bkt.clouddn.com/%E9%99%88%E9%9B%85%E6%A3%AE%20-%20%E6%B8%A9%E6%9F%94%E4%B9%A1.mp3",
+   "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E9%99%88%E9%9B%85%E6%A3%AE%20-%20%E6%B8%A9%E6%9F%94%E4%B9%A1.lrc"
+  },
   {"name": "告白气球",
    "artist": "周杰伦",
    "url": "http://og11a17b0.bkt.clouddn.com/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
@@ -13,10 +18,5 @@
    "artist": "王力宏",
    "url": "http://og11a17b0.bkt.clouddn.com/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.mp3",
    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.lrc"
-  },
-  {"name": "Happy",
-   "artist": "Pharrell Williams",
-   "url": "http://og11a17b0.bkt.clouddn.com/Pharrell%20Williams%20-%20Happy.mp3",
-   "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/Pharrell Williams - Happy.lrc.json"
   }
 ]
