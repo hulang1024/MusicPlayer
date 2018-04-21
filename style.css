@@ -90,6 +90,7 @@ a {
   text-align: center;
   word-wrap: break-word;
   color: gray;
+  cursor: pointer;
 }
 #lyricView p.sel {
   color: #ec90b9;
@@ -110,7 +111,8 @@ a {
   color: black;
   text-align: center;
   word-wrap: break-word;
-  text-shadow: 0.1em 0.1em 0.2em gray
+  text-shadow: 0.1em 0.1em 0.2em gray;
+  pointer-events: none;
 }
 
 #lyricWindow.over {
