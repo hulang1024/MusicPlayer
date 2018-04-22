@@ -64,7 +64,7 @@ a {
 #songList ul li{
   width: 100%;
   overflow: hidden;
-  font-size: 14px;
+  font-size: 1em;
   color: #989898;
   cursor: pointer;
 }
@@ -90,7 +90,7 @@ a {
   line-height: 38px;
   min-height: 38px;
   margin: 0px;
-  font-size: 15px;
+  font-size: 1em;
   text-align: center;
   word-wrap: break-word;
   color: gray;
@@ -98,7 +98,7 @@ a {
 }
 #lyricView p.sel {
   color: #eaeaea;
-  font-size: 17px;
+  font-size: 1.1em;
   -webkit-transition: color 0.3s linear;
   -moz-transition: color 0.3s linear;
   -o-transition: color 0.3s linear;
