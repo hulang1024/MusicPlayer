@@ -26,7 +26,7 @@ function LyricListView(player, lyricLoader) {
       }
 
       if (lyricList && lyricList.length) {
-        draw();
+        load();
         onSeeked(player.getCurrentTime()); // 跟上
         player.signals.timeupdate.add(onTimeUpdate);
         player.signals.seeked.add(onSeeked);
@@ -95,7 +95,7 @@ function LyricListView(player, lyricLoader) {
     currentIndex = 0;
   }
 
-  function draw() {
+  function load() {
     lyricViewDiv.html('');
     lyricList.forEach(function(lyric) {
       var lyricEl = $(document.createElement('p'));
@@ -216,7 +216,7 @@ function LyricWindow(player, lyricLoader) {
       }
     }
     lyricWindowDiv.html(html);
-    lyricWindowDiv.css('top', ($(window).height() - lyricWindowDiv.height()) / 2);
+    lyricWindowDiv.css('top', $(window).height() - lyricWindowDiv.height() - 50);
   }
 }
 

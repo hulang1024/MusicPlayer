@@ -13,7 +13,7 @@ function MusicPlayer() {
   var lyricWindow = new LyricWindow(player, lyricLoader);
   playList.setPlayer(player);
   playList.init();
-  
+
   new ActiveManager(player);
 }
 
@@ -40,15 +40,15 @@ function PlayList() {
   var songs = [];
   var playList = this;
   var player;
-  
+
   this.signals = {
     songSelected: new signals.Signal()
   };
-  
+
   this.setPlayer = function(_player) {
     player = _player;
   }
-  
+
   this.init = function(_songs) {
     // load
     var req = new XMLHttpRequest();
@@ -57,9 +57,9 @@ function PlayList() {
     req.addEventListener('load', function(event){
       var json = event.target.responseText;
       songs = JSON.parse(json);
-      
-      draw();
-      
+
+      load();
+
       // 处理地址栏参数
       var index = 0;
       var params = getURLParamMap(window.location.search);
@@ -76,12 +76,12 @@ function PlayList() {
           player.play();
         });
       }
-      
+
       playList.select(index);
     });
     req.send(null);
   };
-  
+
   this.select = function(index) {
     if (songs.length <= 0)
       return;
@@ -92,12 +92,12 @@ function PlayList() {
     select(index);
     return songs[index];
   }
-  
+
   this.getLength = function() {
     return songs.length;
   }
-  
-  function draw() {
+
+  function load() {
     var songListDiv = $('#songList');
     var ul = $(document.createElement('ul'));
     songs.forEach(function(song, index){
@@ -110,18 +110,18 @@ function PlayList() {
         player.load(index);
         player.play();
       });
-      
+
       ul.append(li);
     });
     songListDiv.append(ul);
   }
-  
+
   function select(index) {
     var lis = $('#songList>ul>li');
     lis.removeClass('sel');
     lis.eq(index).addClass('sel');
   }
-  
+
 }
 
 /*
@@ -148,9 +148,9 @@ function Player(playList) {
   signalNames.forEach(function(name) {
     player.signals[name] = new signals.Signal();
   });
-    
+
   init();
-  
+
   function init() {
     // 为按钮绑定事件处理
     $('#player [data-action]').each(function(){
@@ -158,29 +158,29 @@ function Player(playList) {
         player[ $(this).data('action') + 'OnClick' ]($(this));
       });
     });
-    
+
     $('#player').hover(function() {
       hovered = true;
     }).mouseout(function() {
       hovered = false;
     });
-    
+
     $('#player').show();
     resize();
     window.addEventListener('resize', resize);
-    
+
     audio.onloadstart = function() {
       console.log('loadstart');
       player.signals.loadstart.dispatch();
     }
-    
+
     audio.onloadeddata = function() {
       console.log('loadeddata');
       displayTime(this.duration, this.currentTime);
-      
+
       player.signals.loadeddata.dispatch(playList.getSong(songSelectedIndex), mode);
     }
-    
+
     // 当用户点击Audio开始按钮可导致onplay
     audio.onplay = function() {
       console.log('play');
@@ -189,32 +189,32 @@ function Player(playList) {
       document.title = song.name;
       player.signals.played.dispatch(songSelectedIndex);
     }
-    
+
     audio.onpause = function() {
       console.log('paused');
       playing = false;
       player.signals.paused.dispatch();
     }
-    
+
     audio.ontimeupdate = function() {
       player.signals.timeupdate.dispatch( Math.round(this.currentTime * 1000), this.seeking);
-      
+
       displayTime(this.duration, this.currentTime);
     }
-    
+
     audio.onseeking = function() {
       console.log('seeking');
       player.signals.seeking.dispatch(this.currentTime * 1000);
     }
-    
+
     audio.onseeked = function() {
       console.log('seeked');
       player.signals.seeked.dispatch(this.currentTime * 1000);
     }
-    
+
     audio.onended = function() {
       player.signals.ended.dispatch();
-      
+
       switch (mode) {
         case 'loop':
           if (songSelectedIndex < playList.getLength() - 1)
@@ -230,27 +230,27 @@ function Player(playList) {
           shuffle();
           break;
       }
-      
+
       var song = playList.getSong(songSelectedIndex);
       audio.src = song.url;
       audio.play();
     }
   }
-  
+
   this.load = function(index) {
     songSelectedIndex = index;
     var song = playList.getSong(index);
     audio.src = song.url;
   }
-  
+
   this.play = function(index) {
     audio.play();
   }
-  
+
   // 上一首
   this.prevOnClick = function() {
     player.signals.prev.dispatch();
-    
+
     switch (mode) {
       case 'loop':
       case 'one':
@@ -263,7 +263,7 @@ function Player(playList) {
         shuffle();
         break;
     }
-    
+
     var song = playList.getSong(songSelectedIndex);
     audio.src = song.url;
     // 如果播放状态中,上一首自动播放,如果暂停,上一首不自动播放
@@ -271,11 +271,11 @@ function Player(playList) {
       audio.play();
     }
   }
-  
+
   // 下一首
   this.nextOnClick = function() {
     player.signals.next.dispatch();
-    
+
     switch (mode) {
       case 'loop':
       case 'one':
@@ -288,7 +288,7 @@ function Player(playList) {
         shuffle();
         break;
     }
-    
+
     var song = playList.getSong(songSelectedIndex);
     audio.src = song.url;
     // 如果播放状态中,下一首自动播放,如果暂停,下一首不自动播放
@@ -296,7 +296,7 @@ function Player(playList) {
       audio.play();
     }
   }
-  
+
   this.modeOnClick = function(a) {
     a.removeClass('icon-' + mode);
     turnMode();
@@ -305,31 +305,31 @@ function Player(playList) {
     a.text(name);
     a.attr('title', name);
   }
-  
+
   this.getMode = function() { return mode; }
   this.setMode = function(m) {
     if (['loop', 'shuffle', 'one'].indexOf(m) != -1)
       mode = m;
   }
-  
+
   this.hide = function() {
     if (hovered)
       return;
-    
+
     $(audio).animate({bottom: - $('#player').height()}, 'slow');
   }
-  
+
   this.show = function() {
     $(audio).animate({bottom: 0}, 100);
   }
-  
+
   this.setCurrentTime = function(currentTime) {
     audio.currentTime = currentTime;
   }
   this.getCurrentTime = function() {
     return audio.currentTime * 1000;
   }
-  
+
   function turnMode() {
     switch (mode) {
       case 'loop':
@@ -343,14 +343,14 @@ function Player(playList) {
         break;
     }
   }
-  
+
   function shuffle() {
     var oldIndex = songSelectedIndex;
     do {
       songSelectedIndex = randInt(0, songs.length);
     } while(oldIndex == songSelectedIndex);
   }
-  
+
   function displayTime(duration, currentTime) {
     return;
     var curMinutes = currentTime / 60;
@@ -360,7 +360,7 @@ function Player(playList) {
     $('#time').html('<em>' + padNN(curMinutes) + ':' + padNN(curSeconds) + '</em> / '
       + padNN(durMinutes) + ':' + padNN(durSeconds));
   }
-  
+
   function resize() {
     $('#audio').css('left', ($(window).width() - $('#audio').width()) / 2);
   }
@@ -371,18 +371,18 @@ function ActiveManager(player) {
   var timer = null;
   var isSleeping = true;
   var lastActiveTime = 0;
-  
+
   var intervalTime = 3000;
-  
-  
+
+
   /* 1.在指定间隔时间内没有活动操作就表现‘睡眠’.
      2.活动操作时醒来  */
-  
+
   $(document).mousemove(function(){
     lastActiveTime = +new Date;
     wakeup();
   });
-  
+
   var timer = setInterval(function(){
     if ((+new Date - lastActiveTime) > intervalTime) {
       sleep();
@@ -396,7 +396,7 @@ function ActiveManager(player) {
     $('#songList').fadeIn(100);
     player.show();
   }
-  
+
   function sleep() {
     if (isSleeping)
       return;
@@ -420,7 +420,7 @@ function getURLParamMap(url) {
   var param = url.substr(url.lastIndexOf("?") + 1);
   if (!param)
     return {};
-  
+
   param = param.split("&");
   var paramMap = {};
   param.map(function(p){
