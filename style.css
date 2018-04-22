@@ -19,7 +19,7 @@ a {
 
 #player {
   position: absolute;
-  bottom: 8px;
+  bottom: 0px;
   width: 100%;
   height: 40px;
   overflow-y: hidden;
@@ -44,9 +44,8 @@ a {
 }
 
 #audio {
-  position: absolute;
   bottom: 0;
-  width: 36%;
+  width: 100%;
   height: 40px;
 }
 
@@ -81,6 +80,11 @@ a {
   overflow-y: hidden;
 }
 
+#lyricView .loading {
+  text-align: center;
+  color: white;
+}
+
 #lyricView>p {
   height: auto !important;
   line-height: 38px;
@@ -103,20 +107,21 @@ a {
 
 #lyricWindow {
   position: absolute;
+  bottom: 40px;
   z-index: 10;
   width: 100%;
-  height: auto !important;
+  height: 70px;
   font-size: 3em;
   color: white;
   text-align: center;
-  word-wrap: break-word;
+  overflow: hidden;
   background: #0000004a;
   border-radius: 5px;
   pointer-events: none;
 }
 
 #lyricWindow.over {
-  border: 1px solid black;
+  background: black;
 }
 
 .scrollBar {

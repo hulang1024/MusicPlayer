@@ -19,6 +19,7 @@ function LyricListView(player, lyricLoader) {
   });
 
   player.signals.loadeddata.add(function(song) {
+    lyricViewDiv.html('<div class="loading">歌词加载中...</div>');
     lyricLoader.load(song, function(lyrics) {
       lyricList = lyrics.lyric.getSortedTimeTextList();
       if (lyrics.tlyric) {
@@ -216,7 +217,7 @@ function LyricWindow(player, lyricLoader) {
       }
     }
     lyricWindowDiv.html(html);
-    lyricWindowDiv.css('top', $(window).height() - lyricWindowDiv.height() - 50);
+    //lyricWindowDiv.css('top', $(window).height() - lyricWindowDiv.height());
   }
 }
 
