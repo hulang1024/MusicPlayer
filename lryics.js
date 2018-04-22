@@ -12,6 +12,12 @@ function LyricListView(player, lyricLoader) {
 
   var scroll = new Scroll('#lyricView', 40);
 
+  var resize = function() {
+    lyricViewDiv.height(Math.floor($(window).height() * 0.70));
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
   player.signals.loadstart.add(function() {
     player.signals.timeupdate.remove(onTimeUpdate);
     player.signals.seeked.remove(onSeeked);
@@ -95,6 +101,8 @@ function LyricListView(player, lyricLoader) {
     lastIndex = 0;
     currentIndex = 0;
   }
+
+
 
   function load() {
     lyricViewDiv.html('');

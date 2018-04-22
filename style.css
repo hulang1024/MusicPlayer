@@ -23,7 +23,6 @@ a {
   width: 100%;
   height: 40px;
   overflow-y: hidden;
-  display: none;
 }
 
 #player #btns {
@@ -44,6 +43,7 @@ a {
 }
 
 #audio {
+  position: absolute;
   bottom: 0;
   width: 100%;
   height: 40px;
@@ -75,7 +75,7 @@ a {
 #lyricView {
   top: 8px;
   width: 60%;
-  height: 500px;
+  height: 100px;
   margin: 30px auto;
   overflow-y: hidden;
 }
