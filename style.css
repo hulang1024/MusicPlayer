@@ -110,7 +110,8 @@ a {
   bottom: 40px;
   z-index: 10;
   width: 100%;
-  height: 70px;
+  height: 60px;
+  line-height: 60px;
   font-size: 2.5em;
   color: white;
   text-align: center;
