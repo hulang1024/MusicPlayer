@@ -22,10 +22,9 @@
 
 待实现需求
 ---------
-1. ~~兼容IE6~~
-2. 美观的UI
-3. QRC格式文件解析和Cara OK
-4. 自定义设计和实现播放控件（而非完全使用HTML5 Audio/Video元素的支持）
+1. 美观的UI
+2. QRC格式文件解析和Cara OK
+3. 自定义设计和实现播放控件（而非完全使用HTML5 Audio/Video元素的支持）
 
 
 项目文件说明（目前）
@@ -65,7 +64,3 @@ var CONFIG = {
 ---------
 [soulomoon](https://github.com/soulomoon): 帮助找到 歌词随音频进度跳跃到新位置 的BUG原因。
 
-
-版权
-----
-[BSD-3-Clause](https://github.com/hulang1024/MusicPlayer/blob/master/LICENSE)
