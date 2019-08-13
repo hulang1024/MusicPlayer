@@ -120,7 +120,7 @@ function LyricListView(player, lyricLoader) {
       lyricEl.html(html);
 
       lyricEl.click(function() {
-        player.setCurrentTime((lyric.getTime() - 0) / 1000);
+        player.setCurrentTime(lyric.getTime() - 0);
       });
 
       lyricViewDiv.append(lyricEl);
