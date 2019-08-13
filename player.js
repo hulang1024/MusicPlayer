@@ -339,7 +339,7 @@ function Player(playList) {
   }
 
   this.setCurrentTime = function(currentTime) {
-    audio.currentTime = currentTime;
+    audio.currentTime = currentTime / 1000;
   }
   this.getCurrentTime = function() {
     return audio.currentTime * 1000;
