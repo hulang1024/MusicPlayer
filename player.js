@@ -188,18 +188,29 @@ function Player(playList) {
       var song = playList.getSong(songSelectedIndex);
       document.title = song.name;
       player.signals.played.dispatch(songSelectedIndex);
+
+      clearInterval(timeUpdateTimer);
+      startTimeUpdateTimer();
     }
 
     audio.onpause = function() {
       console.log('paused');
       playing = false;
+      clearInterval(timeUpdateTimer);
       player.signals.paused.dispatch();
     }
 
+    /*
     audio.ontimeupdate = function() {
       player.signals.timeupdate.dispatch( Math.round(this.currentTime * 1000), this.seeking);
-
       displayTime(this.duration, this.currentTime);
+    }*/
+    /* 原生timeupdate事件时间粒度不够，setInterval代替实现 */
+    var timeUpdateTimer = null;
+    function startTimeUpdateTimer() {
+      timeUpdateTimer = setInterval(function() {
+        player.signals.timeupdate.dispatch(Math.round(audio.currentTime * 1000), audio.seeking);
+      }, 10);
     }
 
     audio.onseeking = function() {

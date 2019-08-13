@@ -3,8 +3,8 @@
   padding: 0;
 }
 body {
-  font-family: "Microsoft YaHei";
-  background-color: #272822;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
 }
 
 ul,li {
@@ -65,18 +65,17 @@ a {
   width: 100%;
   overflow: hidden;
   font-size: 1em;
-  color: #989898;
+  color: #666;
   cursor: pointer;
 }
 #songList ul li.sel {
-  color: #fff;
+  color: #5784f9;
 }
 
 #lyricView {
-  top: 8px;
   width: 60%;
   height: 100px;
-  margin: 30px auto;
+  margin: 8px auto;
   overflow-y: hidden;
 }
 
@@ -93,16 +92,16 @@ a {
   font-size: 1em;
   text-align: center;
   word-wrap: break-word;
-  color: gray;
+  color: #999;
   cursor: pointer;
-}
-#lyricView p.sel {
-  color: #eaeaea;
-  font-size: 1.1em;
   -webkit-transition: color 0.3s linear;
   -moz-transition: color 0.3s linear;
   -o-transition: color 0.3s linear;
   transition: color 0.3s linear;
+}
+#lyricView p.sel {
+  color: #333;
+  font-size: 1.1em;
 }
 
 #lyricWindow {
@@ -113,10 +112,9 @@ a {
   height: 60px;
   line-height: 60px;
   font-size: 2.5em;
-  color: white;
+  color: #999;
   text-align: center;
   overflow: hidden;
-  background: #0000004a;
   border-radius: 5px;
   pointer-events: none;
 }
