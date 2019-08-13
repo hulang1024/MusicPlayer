@@ -1,12 +1,20 @@
 [
-  {"name": "心跳",
-   "artist": "王力宏",
-   "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.mp3",
-   "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E5%BF%83%E8%B7%B3.lrc"
+  {
+    "name": "星座",
+    "artist": "王力宏",
+    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.mp3",
+    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.lrc"
   },
-  {"name": "告白气球",
-   "artist": "周杰伦",
-   "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
-   "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
+  {
+    "name": "Rap God",
+    "artist": "Eminem",
+    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/Eminem%20-%20Rap%20God.mp3",
+    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/Eminem%20-%20Rap%20God.lrc"
+  },
+  {
+    "name": "告白气球",
+    "artist": "周杰伦",
+    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
+    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
   }
 ]
