@@ -235,6 +235,10 @@ function Player(playList) {
       audio.src = song.url;
       audio.play();
     }
+
+    audio.onerror = function() {
+      alert('加载错误');
+    }
   }
 
   this.load = function(index) {
