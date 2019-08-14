@@ -69,7 +69,7 @@ a {
   cursor: pointer;
 }
 #songList ul li.sel {
-  color: #5784f9;
+  color: #333;
 }
 
 #lyricView {
@@ -81,7 +81,7 @@ a {
 
 #lyricView .loading {
   text-align: center;
-  color: white;
+  color: #666;
 }
 
 #lyricView>p {
@@ -100,7 +100,7 @@ a {
   transition: color 0.3s linear;
 }
 #lyricView p.sel {
-  color: #333;
+  color: #5784f9;
   font-size: 1.1em;
 }
 

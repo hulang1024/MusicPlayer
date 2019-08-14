@@ -186,13 +186,13 @@ function Player(playList) {
       console.log('play');
       playing = true;
       var song = playList.getSong(songSelectedIndex);
-      document.title = song.name;
+      document.title = '正在播放:' + song.name;
       player.signals.played.dispatch(songSelectedIndex);
 
       clearInterval(timeUpdateTimer);
       startTimeUpdateTimer();
     }
-
+    
     audio.onpause = function() {
       console.log('paused');
       playing = false;
@@ -248,7 +248,9 @@ function Player(playList) {
     }
 
     audio.onerror = function() {
-      alert('加载错误');
+      var song = playList.getSong(songSelectedIndex);
+
+      alert('对不起，加载歌曲 [' + song.name  + '] 时发生错误。');
     }
   }
 

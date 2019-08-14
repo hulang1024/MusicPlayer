@@ -22,21 +22,32 @@ function LyricListView(player, lyricLoader) {
     player.signals.timeupdate.remove(onTimeUpdate);
     player.signals.seeked.remove(onSeeked);
     reset();
+    lyricViewDiv.html('<div class="loading">请稍等，歌曲加载中...</div>');
   });
 
   player.signals.loadeddata.add(function(song) {
+    if (!song.lrcUrl) {
+      lyricViewDiv.html('<div class="loading">暂无歌词。</div>');
+      return;
+    }
+    // 加载歌词
     lyricViewDiv.html('<div class="loading">歌词加载中...</div>');
-    lyricLoader.load(song, function(lyrics) {
-      lyricList = lyrics.lyric.getSortedTimeTextList();
-      if (lyrics.tlyric) {
-        tlyricList = lyrics.tlyric.getSortedTimeTextList();
-      }
+    lyricLoader.load(song, {
+      onSuccess: function(lyrics) {
+        lyricList = lyrics.lyric.getSortedTimeTextList();
+        if (lyrics.tlyric) {
+          tlyricList = lyrics.tlyric.getSortedTimeTextList();
+        }
 
-      if (lyricList && lyricList.length) {
-        load();
-        onSeeked(player.getCurrentTime()); // 跟上
-        player.signals.timeupdate.add(onTimeUpdate);
-        player.signals.seeked.add(onSeeked);
+        if (lyricList && lyricList.length) {
+          load();
+          onSeeked(player.getCurrentTime()); // 跟上
+          player.signals.timeupdate.add(onTimeUpdate);
+          player.signals.seeked.add(onSeeked);
+        }
+      },
+      onFailed: function() {
+        lyricViewDiv.html('<div class="loading">歌词加载失败。</div>');
       }
     });
   });
@@ -143,13 +154,13 @@ function LyricWindow(player, lyricLoader) {
 
   $(document).bind('keydown', function(event) {
     if (event.keyCode == 76) {   // L
-      if ($('#lyricWindow').is(':hidden')) {
+      if (lyricWindowDiv.is(':hidden')) {
         onSeeked(player.getCurrentTime()); // 跟上
         player.signals.timeupdate.add(onTimeUpdate);
         player.signals.seeked.add(onSeeked);
-        $('#lyricWindow').show();
+        lyricWindowDiv.show();
       } else {
-        $('#lyricWindow').hide();
+        lyricWindowDiv.hide();
         player.signals.timeupdate.remove(onTimeUpdate);
         player.signals.seeked.remove(onSeeked);
       }
@@ -163,16 +174,21 @@ function LyricWindow(player, lyricLoader) {
   });
 
   player.signals.loadeddata.add(function(song) {
-    lyricLoader.load(song, function(lyrics) {
-      lyricList = lyrics.lyric.getSortedTimeTextList();
-      if (lyrics.tlyric) {
-        tlyricList = lyrics.tlyric.getSortedTimeTextList();
-      }
+    lyricLoader.load(song, {
+      onSuccess: function(lyrics) {
+        lyricList = lyrics.lyric.getSortedTimeTextList();
+        if (lyrics.tlyric) {
+          tlyricList = lyrics.tlyric.getSortedTimeTextList();
+        }
 
-      if (lyricList && lyricList.length) {
-        onSeeked(player.getCurrentTime()); // 跟上
-        player.signals.timeupdate.add(onTimeUpdate);
-        player.signals.seeked.add(onSeeked);
+        if (lyricList && lyricList.length) {
+          onSeeked(player.getCurrentTime()); // 跟上
+          player.signals.timeupdate.add(onTimeUpdate);
+          player.signals.seeked.add(onSeeked);
+        }
+      },
+      onFailed() {
+        lyricWindowDiv.hide();
       }
     });
   });
@@ -302,15 +318,15 @@ function LyricLoader() {
   var wait = 0;
   var loadedSignal = new signals.Signal();
 
-  this.load = function(song, callback) {
+  this.load = function(song, options) {
     if (lastUrl == song.lrcUrl) {
       if (wait) {
         loadedSignal.add(function(lyric) {
-          callback(lyric);
+          options.onSuccess(lyric);
         });
         return;
       } else {
-        return callback(lastLyric);
+        return options.onSuccess(lastLyric);
       }
     }
 
@@ -318,6 +334,10 @@ function LyricLoader() {
     var req = new XMLHttpRequest();
     req.open('GET', song.lrcUrl + '?t=' + new Date().getTime(), true);
     req.addEventListener('load', function(event){
+      if (event.target.status == 404) {
+        options.onFailed(event);
+        return;
+      }
       var content = event.target.responseText;
       // 判断是否JSON
       if (song.lrcUrl.substring(song.lrcUrl.lastIndexOf('.') + 1) == 'json') {
@@ -331,7 +351,7 @@ function LyricLoader() {
         lastLyric.lyric = new LRCParser().fromString(content);
         lastLyric.tlyric = null;
       }
-      callback(lastLyric);
+      options.onSuccess(lastLyric);
       loadedSignal.dispatch(lastLyric);
       loadedSignal.removeAll();
       wait = 0;
