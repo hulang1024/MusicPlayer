@@ -20,7 +20,7 @@
   {
     "name": "告白气球",
     "artist": "周杰伦",
-    "url": "http://220.249.112.147:8585/play/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
-    "lrcUrl": "http://220.249.112.147:8585/play/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
+    "url": "http://220.249.112.147:8585/play/audio/gbqq.mp3",
+    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
   }
 ]
