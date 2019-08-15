@@ -2,25 +2,25 @@
   {
     "name": "星座",
     "artist": "王力宏",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.lrc"
+    "url": "http://220.249.112.147:8585/play/audio/xz.mp3",
+    "lrcUrl": "http://220.249.112.147:8585/play/lrc/xz.lrc"
   },
   {
     "name": "Rap God",
     "artist": "Eminem",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/Eminem%20-%20Rap%20God.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/Eminem%20-%20Rap%20God.lrc.json"
+    "url": "http://220.249.112.147:8585/play/audio/Eminem%20-%20Rap%20God.mp3",
+    "lrcUrl": "http://220.249.112.147:8585/play/lrc/Eminem%20-%20Rap%20God.lrc.json"
   },
   {
     "name": "我怀念的",
     "artist": "孙燕姿",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%AD%99%E7%87%95%E5%A7%BF%20-%20%E6%88%91%E6%80%80%E5%BF%B5%E7%9A%84.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%AD%99%E7%87%95%E5%A7%BF%20-%20%E6%88%91%E6%80%80%E5%BF%B5%E7%9A%84.lrc"
+    "url": "http://220.249.112.147:8585/play/audio/whnd.mp3",
+    "lrcUrl": "http://220.249.112.147:8585/play/lrc/whnd.lrc"
   },
   {
     "name": "告白气球",
     "artist": "周杰伦",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
+    "url": "http://220.249.112.147:8585/play/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
+    "lrcUrl": "http://220.249.112.147:8585/play/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
   }
 ]
