@@ -85,7 +85,7 @@ function LyricListView(player, lyricLoader) {
 
     unselectLyric(lyricList[lastIndex].getTime());
     selectLyric(lyricList[currentIndex].getTime());
-    scrollToLyric(currentIndex, {speed: 'slow'});
+    scrollToLyric(currentIndex, {speed: 'fast'});
 
     lastIndex = currentIndex;
     currentIndex++;
