@@ -210,7 +210,7 @@ function Player(playList) {
     function startTimeUpdateTimer() {
       timeUpdateTimer = setInterval(function() {
         player.signals.timeupdate.dispatch(Math.round(audio.currentTime * 1000), audio.seeking);
-      }, 10);
+      }, 5);
     }
 
     audio.onseeking = function() {
