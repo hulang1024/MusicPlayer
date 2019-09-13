@@ -12,16 +12,10 @@
     "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/Eminem%20-%20Rap%20God.lrc.json"
   },
   {
-    "name": "Brain Power",
-    "artist": "noma",
-    "url": "http://m7.music.126.net/20190818112548/b383cb114160d2ea513b5851e5dec180/ymusic/ebc7/81a2/b9c5/7e22afe88d9f5215d29113725608c95a.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/41672464.lrc.json"
-  },
-  {
-    "name": "我怀念的",
-    "artist": "孙燕姿",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%AD%99%E7%87%95%E5%A7%BF%20-%20%E6%88%91%E6%80%80%E5%BF%B5%E7%9A%84.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%AD%99%E7%87%95%E5%A7%BF%20-%20%E6%88%91%E6%80%80%E5%BF%B5%E7%9A%84.lrc"
+    "name": "童话镇"",
+    "artist": "陈一发",
+    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E9%99%88%E4%B8%80%E5%8F%91%20-%20%E7%AB%A5%E8%AF%9D%E9%95%87.mp3",
+    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E9%99%88%E4%B8%80%E5%8F%91%20-%20%E7%AB%A5%E8%AF%9D%E9%95%87.lrc"
   },
   {
     "name": "告白气球",
