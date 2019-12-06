@@ -1,32 +1,8 @@
 [
   {
-    "name": "说了再见",
-    "artist": "周杰伦",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E8%AF%B4%E4%BA%86%E5%86%8D%E8%A7%81.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E8%AF%B4%E4%BA%86%E5%86%8D%E8%A7%81.lrc"
+    "name": "If I Lose Myself",
+    "artist": "OneRepublic",
+    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/OneRepublic%20-%20IfILoseMyself.mp3",
+    "lrcUrl": ""
   },
-  {
-    "name": "星座",
-    "artist": "王力宏",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E7%8E%8B%E5%8A%9B%E5%AE%8F%20-%20%E6%98%9F%E5%BA%A7.lrc"
-  },
-  {
-    "name": "Rap God",
-    "artist": "Eminem",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/Eminem%20-%20Rap%20God.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/Eminem%20-%20Rap%20God.lrc.json"
-  },
-  {
-    "name": "童话镇",
-    "artist": "陈一发",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E9%99%88%E4%B8%80%E5%8F%91%20-%20%E7%AB%A5%E8%AF%9D%E9%95%87.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E9%99%88%E4%B8%80%E5%8F%91%20-%20%E7%AB%A5%E8%AF%9D%E9%95%87.lrc"
-  },
-  {
-    "name": "告白气球",
-    "artist": "周杰伦",
-    "url": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/audio/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
-    "lrcUrl": "https://raw.githubusercontent.com/hulang1024/MusicPlayer/res/lrc/%E5%91%A8%E6%9D%B0%E4%BC%A6%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.lrc"
-  }
 ]
